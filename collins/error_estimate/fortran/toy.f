@@ -1,0 +1,17 @@
+ 	PROGRAM TOY
+
+	IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+ 
+
+c       EXTERNAL F
+ 
+
+c  	A = 0.
+c	B = 4.
+c	NSEG = 1
+c	RELTOL = 1.E-4
+c	ABSTOL = 0
+c        CALL DADAPT(F,A,B,NSEG,RELTOL,ABSTOL,RES,ERR)
+
+c        PRINT*,RES,ERR
+        END

@@ -1,0 +1,64 @@
+GFORTRAN module version '0' created from xpns2p.f90 on Wed Jun 10 22:06:27 2015
+MD5:a5b1695166560fa39d81a5eba73e7558 -- If you edit this, you'll get what you deserve.
+
+(() () () () () () () () () () () () () () () () () () () () () () () ()
+() () ())
+
+()
+
+()
+
+()
+
+()
+
+(2 'name_xpns2' 'xpns2p' 'name_xpns2' 1 ((PARAMETER UNKNOWN-INTENT
+UNKNOWN-PROC UNKNOWN IMPLICIT-SAVE) (CHARACTER 1 0 0 CHARACTER ((
+CONSTANT (INTEGER 4 0 0 INTEGER ()) 0 '6'))) 0 0 () (CONSTANT (
+CHARACTER 1 0 0 CHARACTER (())) 0 6 'xpns2p') () 0 () () () 0 0)
+3 'p2nsb' 'xpns2p' 'p2nsb' 1 ((PROCEDURE UNKNOWN-INTENT MODULE-PROC DECL
+UNKNOWN FUNCTION) (REAL 8 0 0 REAL ()) 4 0 (5 6) () 3 () () () 0 0)
+7 'p2nsma' 'xpns2p' 'p2nsma' 1 ((PROCEDURE UNKNOWN-INTENT MODULE-PROC
+DECL UNKNOWN FUNCTION) (REAL 8 0 0 REAL ()) 8 0 (9 10) () 7 () () () 0 0)
+11 'p2nsmc' 'xpns2p' 'p2nsmc' 1 ((PROCEDURE UNKNOWN-INTENT MODULE-PROC
+DECL UNKNOWN FUNCTION) (REAL 8 0 0 REAL ()) 12 0 (13 14) () 11 () () ()
+0 0)
+15 'p2nspa' 'xpns2p' 'p2nspa' 1 ((PROCEDURE UNKNOWN-INTENT MODULE-PROC
+DECL UNKNOWN FUNCTION) (REAL 8 0 0 REAL ()) 16 0 (17 18) () 15 () () ()
+0 0)
+19 'p2nspc' 'xpns2p' 'p2nspc' 1 ((PROCEDURE UNKNOWN-INTENT MODULE-PROC
+DECL UNKNOWN FUNCTION) (REAL 8 0 0 REAL ()) 20 0 (21 22) () 19 () () ()
+0 0)
+23 'p2nssa' 'xpns2p' 'p2nssa' 1 ((PROCEDURE UNKNOWN-INTENT MODULE-PROC
+DECL UNKNOWN FUNCTION) (REAL 8 0 0 REAL ()) 24 0 (25 26) () 23 () () ()
+0 0)
+27 'xpns2p' 'xpns2p' 'xpns2p' 1 ((MODULE UNKNOWN-INTENT UNKNOWN-PROC
+UNKNOWN UNKNOWN) (UNKNOWN 0 0 0 UNKNOWN ()) 0 0 () () 0 () () () 0 0)
+17 'y' '' 'y' 16 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN UNKNOWN
+DUMMY) (REAL 8 0 0 REAL ()) 0 0 () () 0 () () () 0 0)
+18 'nf' '' 'nf' 16 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN
+UNKNOWN DUMMY) (INTEGER 4 0 0 INTEGER ()) 0 0 () () 0 () () () 0 0)
+9 'y' '' 'y' 8 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN UNKNOWN
+DUMMY) (REAL 8 0 0 REAL ()) 0 0 () () 0 () () () 0 0)
+10 'nf' '' 'nf' 8 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN UNKNOWN
+DUMMY) (INTEGER 4 0 0 INTEGER ()) 0 0 () () 0 () () () 0 0)
+5 'y' '' 'y' 4 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN UNKNOWN
+DUMMY) (REAL 8 0 0 REAL ()) 0 0 () () 0 () () () 0 0)
+6 'nf' '' 'nf' 4 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN UNKNOWN
+DUMMY) (INTEGER 4 0 0 INTEGER ()) 0 0 () () 0 () () () 0 0)
+21 'y' '' 'y' 20 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN UNKNOWN
+DUMMY) (REAL 8 0 0 REAL ()) 0 0 () () 0 () () () 0 0)
+22 'nf' '' 'nf' 20 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN
+UNKNOWN DUMMY) (INTEGER 4 0 0 INTEGER ()) 0 0 () () 0 () () () 0 0)
+13 'y' '' 'y' 12 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN UNKNOWN
+DUMMY) (REAL 8 0 0 REAL ()) 0 0 () () 0 () () () 0 0)
+14 'nf' '' 'nf' 12 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN
+UNKNOWN DUMMY) (INTEGER 4 0 0 INTEGER ()) 0 0 () () 0 () () () 0 0)
+25 'y' '' 'y' 24 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN UNKNOWN
+DUMMY) (REAL 8 0 0 REAL ()) 0 0 () () 0 () () () 0 0)
+26 'nf' '' 'nf' 24 ((VARIABLE UNKNOWN-INTENT UNKNOWN-PROC UNKNOWN
+UNKNOWN DUMMY) (INTEGER 4 0 0 INTEGER ()) 0 0 () () 0 () () () 0 0)
+)
+
+('name_xpns2' 0 2 'p2nsb' 0 3 'p2nsma' 0 7 'p2nsmc' 0 11 'p2nspa' 0 15
+'p2nspc' 0 19 'p2nssa' 0 23 'xpns2p' 0 27)

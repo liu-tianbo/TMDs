@@ -1,0 +1,16 @@
+#ifndef __FIT_SETS_H__
+#define __FIT_SETS_H__
+
+
+void fit_sidis_sets_random(TMinuit* fit, SETS& set1, const char* write_file1, SETS& set2, const char* write_file2, int sigma); // we need also realisation with 2 sets such as for COLLINS, for example. RANDOM NUMBERS!!!!
+
+
+
+
+// for sigma precision:
+const int one_sigma = 1;
+const int two_sigma = 2;
+const int one_delta_chi = 3;
+const int two_percent_chi2 = 4;
+
+#endif //#ifndef  __FIT_SIDIS_SETS_H__

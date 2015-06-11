@@ -1,0 +1,21 @@
+#!/bin/sh
+
+cd error_estimate
+
+make clean
+
+make all
+
+./*.exe |tee list.txt
+
+cd ..
+
+rm *.o
+
+rm *.exe
+
+make all
+
+./*.exe |tee result.txt
+
+rm *.exe
