@@ -8,40 +8,21 @@
 #include <ctime>
 
 
-#include <fit_sets.h>
-
 PROTOCCALLSFSUB3(CORSET,corset,PVOID,PVOID,INT)
 #define   CORSET(VCOR,CCOR,NPARAM)  CCALLSFSUB3(CORSET,corset,PVOID,PVOID,INT,VCOR,CCOR,NPARAM)
 PROTOCCALLSFSUB3(CORGEN,corgen,PVOID,PVOID,INT)
 #define   CORGEN(VCOR,XCOR,NPARAM)  CCALLSFSUB3(CORGEN,corgen,PVOID,PVOID,INT,VCOR,XCOR,NPARAM)
 
 using namespace std;
-
-
-double chi2_calc(double BLNY_new, double Nu_new, double Nd_new,double au_new, double ad_new, double bu_new, 
-		 double bd_new, double Nu_t_new, double Nd_t_new, double au_t_new, double ad_t_new, double bu_t_new, double bd_t_new)
- {
-  
-   double chi2 = 220.; // PLUG YOUR FUNCTION HERE! THIS IS A DUMMY FUNCTION NOW
-   return chi2;
- }
- 
- 
  
 
 //========================================================= main
 int main(int argc, char **argv)
 {
   int    npar = 13; // number of parameters
+
+  int sets_to_generate = strtol(argv[1],NULL,0); // argv[1] should have number of sets to generate
   
-  double percentile50 = 248.3; // for 249 dof
-
-  double percentile90 = 278.0; // for 249 dof
-
-  double Delta_chi2 = percentile90 - percentile50; // 90% C.L.
-
-// Found by Peng:
-   double Minimun_chi2 =  218.407;
 
 // paramers [0] - mean [1] error from MINUIT
     double  BLNY[2]   =         {2.36166e-02,   7.17002e-04};  //0 
@@ -108,17 +89,17 @@ int main(int argc, char **argv)
 // prepare for generation vcor->ccor:
   CORSET(vcor,ccor,npar);
 
-//  for (int i = 0; i < npar; i++){
-//    for (int j = 0; j < npar; j++){
-//      cout << ccor[i][j] << " "; // I have to use float precision...
-//    }
-//    cout << endl;
-//  }
-
   int   generated_set_number = 0;
 
 // new parameters to be written in this file:
   FILE *par_write = fopen( "new_parameters.dat", "w" );
+
+ 
+ // Write best fit parameters 
+      printf("%8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f \n",BLNY[0], Nu[0], Nd[0], au[0], ad[0], bu[0], bd[0], Nu_t[0], Nd_t[0], au_t[0], ad_t[0], bu_t[0], bd_t[0]);
+      //write parameter set...
+      fprintf(par_write,"%8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f \n",BLNY[0], Nu[0], Nd[0], au[0], ad[0], bu[0], bd[0], Nu_t[0], Nd_t[0], au_t[0], ad_t[0], bu_t[0], bd_t[0]);      
+  generated_set_number++;
 
   
   do{
@@ -151,21 +132,15 @@ int main(int argc, char **argv)
     bu_new < 0.   || bd_new < 0.  
     ) continue;
  
- 
-// Now calculate chi2 with new parameters:
-   double chi2 = chi2_calc(BLNY_new, Nu_new, Nd_new, au_new, ad_new, bu_new, bd_new, Nu_t_new, Nd_t_new, au_t_new, ad_t_new, bu_t_new, bd_t_new);
- 
- 
-// Are the new parameters within Delta_chi2 of the minimum?
-    if( ( chi2 - Minimun_chi2 ) <= Delta_chi2 ){
+
+// Write parameters
+  
      printf("%8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f \n",BLNY_new, Nu_new, Nd_new, au_new, ad_new, bu_new, bd_new, Nu_t_new, Nd_t_new, au_t_new, ad_t_new, bu_t_new, bd_t_new);
       //write parameter set...
       fprintf(par_write,"%8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f %8.6f \n",BLNY_new, Nu_new, Nd_new, au_new, ad_new, bu_new, bd_new, Nu_t_new, Nd_t_new, au_t_new, ad_t_new, bu_t_new, bd_t_new);      
       generated_set_number++;
-    }
-
-
-  } while ( generated_set_number < 2000 ); //  
+    
+  } while ( generated_set_number < sets_to_generate ); //  
 
    
   cout << "All "<< generated_set_number << " sets were generated." << endl;  

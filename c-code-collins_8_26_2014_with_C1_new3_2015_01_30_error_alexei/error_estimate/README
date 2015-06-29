@@ -78,13 +78,8 @@ explained in the paper.
 
 Usage:
 
-Modify the function 
- double chi2_calc(double BLNY_new, double Nu_new, double Nd_new,double au_new, double ad_new, double bu_new, 
-		 double bd_new, double Nu_t_new, double Nd_t_new, double au_t_new, double ad_t_new, double bu_t_new, double bd_t_new)
-plugging there calculation of chi2.
-
-The program will write a file new_parameters.dat wityh sets of parameters that satisfy chi2 < chi2min + Deltachi2
-
+ 
+The program will write a file new_parameters.dat with sets of parameters 
 
 
 Makefile:
@@ -100,3 +95,13 @@ Typing
 make fit_sets.exe
 
 will create   fit_sets.exe running whch produces the monte carlo sampling. 
+
+
+
+
+USAGE OF THE PROGRAM
+
+fit_sets.exe 2000
+
+will generate 2000 pseudo parameter sets
+the first set will be always best fit

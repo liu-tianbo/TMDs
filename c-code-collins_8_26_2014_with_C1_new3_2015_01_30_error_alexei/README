@@ -1,0 +1,14 @@
+THE USAGE OF THE PROGRAM
+
+
+collins.exe -DATA 0
+
+will generate and store pseudodata assigning experimental error to the calculation with the best fit 
+at each kinematical bin
+
+it also calculates and stores denominator for asymmetries needed at the next step
+
+
+collins.exe -NO 10
+
+will use parameter set 10 and calculate chi^2 and store information on transversity U and D and the values for tensor charge at 10 GeV^2
