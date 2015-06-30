@@ -11,6 +11,7 @@
 #include "Math/AllIntegrationTypes.h"
 #include "Math/Functor.h"
 #include "Math/GaussIntegrator.h"
+#include "Math/GSLIntegrator.h"
 #include "TMinuit.h"
 #include "TCanvas.h"
 #include "TGraph.h"
@@ -982,6 +983,55 @@ POLARISED_PIM[i]=valunpo1;
 }
 
 
+
+
+// tensor charge at Q2 = 10 GeV^2 //////////////////
+
+
+double inttensorup( double x, void * t){
+   double Q2 = 10;
+   
+   return pop_u(x,Q2);  
+
+}
+
+
+double inttensordown( double x, void * t){
+   double Q2 = 10;
+   
+   return pop_d(x,Q2);  
+
+}
+
+
+double tensorcharge_up( double x_min, double x_max){
+
+   // Create the Integrator
+   ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE);
+ 
+   // Set parameters of the integration
+   //ROOT::Math::Functor tens(&inttensorup,1); 
+   ig.SetFunction(&inttensorup);
+   ig.SetRelTolerance(0.001);
+ 
+   return ig.Integral(x_min, x_max);
+}
+
+
+
+double tensorcharge_down( double x_min, double x_max){
+
+   // Create the Integrator
+   ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE);
+ 
+   // Set parameters of the integration
+   ig.SetFunction(&inttensordown);
+   ig.SetRelTolerance(0.001);
+ 
+   return ig.Integral(x_min, x_max);
+}
+
+
 //////////////////////////////////////////////////////////////////
 ////////////////////// END ///////////////////////////////////////
 
@@ -1123,6 +1173,9 @@ int main(int argc, char **argv)
    int set_used = 0; // best fit
      
    double par_space[long_list][13]; // each line consists of 14 parameters
+   
+   double x_min_jlab = 1.; // to store min and max value of x in SOLID
+   double x_max_jlab = 0.; 
 
 
    ifstream outfile_p ("error_estimate/new_parameters.dat" ); // this is the file 
@@ -1321,6 +1374,10 @@ int main(int argc, char **argv)
    for( int i = 0; i < number_pip_bins; i++){
 	int nbin =0;
     infile >> nbin >> zval[i] >> xval[i] >> Q2val[i] >> ptval[i] >> UNPOLARISED_PIP[i] >> POLARISED_PIP[i] >> ERROR_POLARISED_PIP[i];
+    
+    if (x_min_jlab >= xval[i]) x_min_jlab = xval[i]; //min value at JLAB
+    if (x_max_jlab <= xval[i]) x_max_jlab = xval[i]; //max value at JLAB
+   
 	
    }    
    infile.close();
@@ -1419,6 +1476,10 @@ int main(int argc, char **argv)
    for( int i = 0; i < number_pip_bins; i++){
 	int nbin =0;
     infile >> nbin >> zval[i] >> xval[i] >> Q2val[i] >> ptval[i] >> UNPOLARISED_PIM[i] >> POLARISED_PIM[i] >> ERROR_POLARISED_PIM[i];
+    
+    if (x_min_jlab >= xval[i]) x_min_jlab = xval[i]; //min value at JLAB
+    if (x_max_jlab <= xval[i]) x_max_jlab = xval[i]; //max value at JLAB
+
 	
    }    
    infile.close();
@@ -1452,10 +1513,16 @@ int main(int argc, char **argv)
    filename_write.Form("chi2_%d.dat",set_used);
  
    ofstream outfile(filename_write);
-	
+
+   double x_min_tens = 1.e-5; // limits for integration of tensor charge in the whole region
+   double x_max_tens = 0.9999;
  	
-   // write number of set used, chi2 for pi-, number of points for pi-, chi2 for pi+, number of points for pi+  and the sums	
-   outfile << set_used << " " << chi2_pim << " " << number_pim_bins << " " << chi2_pip << " "  << number_pip_bins << " "<< chi2_pim + chi2_pip  << " " << number_pim_bins + number_pip_bins << " " << endl;
+ 	
+ 	   if(VERBOSE) cout << "x_min_jlab =  " <<  x_min_jlab << ", x_max_jlab = " << x_max_jlab << endl;
+
+ 	
+   // write number of set used, chi2 for pi-, number of points for pi-, chi2 for pi+, number of points for pi+  and the sums, tensor_up[0,1], tensor_down[0,1], tensor_up[x_min_jlab,x_max_jlab], 	tensor_down[x_min_jlab,x_max_jlab]
+   outfile << set_used << " " << chi2_pim << " " << number_pim_bins << " " << chi2_pip << " "  << number_pip_bins << " "<< chi2_pim + chi2_pip  << " " << number_pim_bins + number_pip_bins << " " << tensorcharge_up(x_min_tens,x_max_tens) << " " << tensorcharge_down(x_min_tens,x_max_tens) << " " << tensorcharge_up(x_min_jlab,x_max_jlab) << " " << tensorcharge_down(x_min_jlab,x_max_jlab) << endl;
 	
 	
    outfile.close();
