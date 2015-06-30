@@ -1005,82 +1005,7 @@ POLARISED_PIM[i]=valunpo1;
 
 
 
-// double chisdis_x_N_Jlab_pip (double* fit , int  numj ,int numi ,  double zi[][9] ,
-// 				double xi[][9] ,double Q2i[][9],double data[][9],double error[][9], int nu  ,double y[][9]  ) 
-// { 
-//  Sit=S_Jlab;
-// 
-// double chiv=0;
-// 
-// double chiv_g[numj][numi];
-// 
-// for(int i=0 ; i<numi ; ++i )
-// {
-//  for(int j=0 ; j<numj ; ++j )
-// { 
-//   chiv_g[j][i]=0;
-//  }}
-// 
-//  #pragma omp parallel for
-// 
-// 
-//  for(int i=0 ; i<numi ; ++i )
-// {
-//  for(int j=0 ; j<numj ; ++j )
-// { 
-//    if (xi[j][i] < 0.000001 )
-//      {   continue; }
-//    //   if (Q2i[j][i] <1.5    ) continue;
-// 
-//           zit=zi[j][i];
-//           xit=xi[j][i];
-//           Q2it=Q2i[j][i];
-// 
-// ROOT::Math::Functor wfpo(&ker2_fun_po_pip_xz_N,4);  
-// ROOT::Math::IntegratorMultiDim igpo(ROOT::Math::IntegrationMultiDim::kADAPTIVE);
-// igpo.SetFunction(wfpo);
-// 
-// 
-//  double valunpo1 = unpo_dis_x_N_pip[j][i];
-// 
-// 
-// double valpo1 = igpo.Integral(a,b);
-// 
-// 
-// // double DD=2*(1-y[j][i])/(1+(1-y[j][i])*(1-y[j][i]));
-// 
-//  
-// double  val=valpo1/valunpo1;
-// 
-// 
-// resee[nu][j][i]=val;
-// //  cout<<val<<endl;
-//  
-// chiv_g[j][i]=(val-data[j][i])*(val-data[j][i])/(error[j][i]*error[j][i]);
-// 
-// 
-// //   //  cout<<"data="<<data[j][i]<<endl;
-// //   cout<<"val= " <<val<<endl;  
-//   // cout<<"Chi^2="<<(val-data[j][i])*(val-data[j][i])/(error[j][i]*error[j][i])<<endl;
-// } 
-//  // cout<<chiv<<endl;
-// }
-// 
-// 
-//  for(int j=0 ; j<numj ; ++j )
-// {
-//  for(int i=0 ; i<numi ; ++i )
-// { 
-// 
-//   chiv+=chiv_g[j][i];
-// 
-//  }}
-// 
-// //cout<<"TChi^2="<<chiv<<endl;
-// return chiv;
-// 
-// }
-
+ 
 
 
 
@@ -1100,85 +1025,12 @@ POLARISED_PIM[i]=valunpo1;
 
 
 
-// void fcn(  Double_t *par  )
-// {
-// //time_t tstart, tend;
-// //tstart = time(0);
-// 
-//  BNLYit=par[0];
-//  Nuit=par[1];
-//  Ndit=par[2];
-//  auit=par[3];
-//  adit=par[4];
-//  buit=par[5];
-//  bdit=par[6];
-// 
-//  Nuit_t=par[7];
-//  Ndit_t=par[8];
-//  auit_t=par[9];
-//  adit_t=par[10];
-//  buit_t=par[11];
-//  bdit_t=par[12];
-// 
-//  // Nuit_t=0;
-//  // Ndit_t=0;
-//  // auit_t=0;
-//  // adit_t=0;
-//  // buit_t=0;
-//  // bdit_t=0;
-// 
-// 
-// 
-//   Nubit_t=0;
-//   Ndbit_t=0;
-//   aubit_t=0;
-//   adbit_t=0;
-//   bubit_t=0;
-//   bdbit_t=0;
-// 
-//  
-// 
-// 
-//  double asQ0 = as(2.4), Q0=sqrt(2.4);
-// 
-//   hoppetEvolve(asQ0, Q0, nloop, 1.0, heralhc_init, Q0);  
-// 
-//  // for( int i=0 ; i<10 ;++i)
-//  //   {
-//  //     cout<< pof_u_pi(  (1+i)*0.05,  3.0  )<<endl;
-//  //    cout<< pof_u_pi(  (1+i)*0.05,    110.0  )<<endl;
-// 
-//  // }
-// 
-//   double v[2];
-// 
-//     v[0]=chisdis_x_N_Jlab_pip     (par ,1 ,4 ,zd19,xd19       ,Q2d19, data19, error19,22 ,yd19 );
-//     v[1]=chisdis_x_N_Jlab_pim     (par ,1 ,4 ,zd20,xd20       ,Q2d20, data20, error20,23 ,yd20 );
-// 
-//    double  f1=0;
-// 
-//       for(int i=0 ; i<2 ; ++i )
-// 	{f1= f1+v[i];
-// 	  //	  cout<<i<<","<<v[i]<<endl;
-// }
-//  
-//    
-//     cout <<f1<<" "<<par[0]<<" "<<par[1]<<" "<<par[2]<<" "<<par[3]<<" "<<par[4]<<" "<<par[5] <<" "<<par[6]
-//     
-//     <<" "<<par[7]<<" "<<par[8]<<" "<<par[9]<<" "<<par[10]<<" "<<par[11]<<" "<<par[12]
-//                     <<endl;
-//     
-//    
-//     //tend = time(0);
-// 
-//     //cout << "One rountine   took " << difftime(tend, tstart) << " second(s)." << endl;
-//   
-// }
+
 
 
 double Q2val[5000],xval[5000],zval[5000],ptval[5000],yval[5000],Astat[5000],N[5000],coverage[5000],coef[3][5000];
 
-bool VERBOSE = true; // print everything or not
+bool VERBOSE = false; // print everything or not
 
 
 
@@ -1224,7 +1076,7 @@ int read_data(int target_flag=3, int particle_flag=1, int flag_t=0){
 	int count1,count2;
 	
 	
-	double temp;
+	//double temp;
 	int pt_flag = -1;
 
 	infile >> count1;
@@ -1433,6 +1285,8 @@ int main(int argc, char **argv)
    }
     
    outfile1.close();
+   
+   
 
 
     }
@@ -1444,19 +1298,31 @@ int main(int argc, char **argv)
     
     TString filename = "solid_data_3he_pip.dat";
  
+ 
     ifstream infile(filename);
-	
-    // format of the pseudo-data
-    // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section
-	
-	int number_pip_bins = 3;
-	
+    
+    // count number of lines first
+    int nlines = 0;
+    
+    for (string s; getline(infile,s); ) {
+        ++nlines;
+    }
+   infile.close();
+   
+   infile.open(filename,std::ifstream::in);
+   // count number of lines first
+   int number_pip_bins = nlines ;
+    
+   if(VERBOSE) cout << " Number of lines in  " <<  filename << " is = " << number_pip_bins << endl;
+    
+
+   // format of the pseudo-data
+   // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section 	
    for( int i = 0; i < number_pip_bins; i++){
 	int nbin =0;
     infile >> nbin >> zval[i] >> xval[i] >> Q2val[i] >> ptval[i] >> UNPOLARISED_PIP[i] >> POLARISED_PIP[i] >> ERROR_POLARISED_PIP[i];
 	
-   }
-    
+   }    
    infile.close();
 
   
@@ -1497,82 +1363,144 @@ int main(int argc, char **argv)
 
   
     
-  Sit=S_Jlab12;
+   Sit=S_Jlab12;
+   double a[3] =  {b_l   ,0  ,0 };
 
-  double a[3] =  {b_l   ,0  ,0 };
+   double b[3] =  {b_u   ,1  ,1 };
 
-  double b[3] =  {b_u   ,1  ,1 };
-
-  double chi2 = 0;
+   double chi2_pip = 0;
   
   
  
- for(int i=0 ; i<number_pip_bins ; ++i )
-{ 
+   for(int i=0 ; i<number_pip_bins ; ++i )
+   { 
 
         zit=zval[i];
         xit=xval[i];
        Q2it=Q2val[i];
       phtit=ptval[i];
 
-ROOT::Math::Functor wfunpo(&ker2_fun_po_pip_xz_N,3); 
-ROOT::Math::IntegratorMultiDim igunpo(ROOT::Math::IntegrationMultiDim::kADAPTIVE);
-igunpo.SetFunction(wfunpo);
+   ROOT::Math::Functor wfunpo(&ker2_fun_po_pip_xz_N,3); 
+   ROOT::Math::IntegratorMultiDim igunpo(ROOT::Math::IntegrationMultiDim::kADAPTIVE);
+   igunpo.SetFunction(wfunpo);
 
-double value = igunpo.Integral(a,b);
+   double value = igunpo.Integral(a,b);
 
-chi2 += pow((value/UNPOLARISED_PIP[i] - POLARISED_PIP[i]),2) / pow((ERROR_POLARISED_PIP[i]),2);
-
-
-
-}  
-    cout << chi2 << endl;
+   chi2_pip += pow((value/UNPOLARISED_PIP[i] - POLARISED_PIP[i]),2) / pow((ERROR_POLARISED_PIP[i]),2);
+   }  
+ 
+   if(VERBOSE) cout << chi2_pip << endl;
     
     
 
 
 // PI- data now:
-    filename = "solid_data_3he_pim.dat";
+  filename = "solid_data_3he_pim.dat";
  
-    ifstream infile1(filename);
-	
-    // format of the pseudo-data
-    // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section
-	
-	int number_pim_bins = 3;
-	
-   for( int i = 0; i < number_pim_bins; i++){
-	int nbin =0;
-    infile1 >> nbin >> zval[i] >> xval[i] >> Q2val[i] >> ptval[i] >> UNPOLARISED_PIM[i] >> POLARISED_PIM[i] >> ERROR_POLARISED_PIM[i];
-	
-   }
+  infile.open(filename,std::ifstream::in);
     
-   infile1.close();
+    // count number of lines first
+    nlines = 0;
+    
+    for (string s; getline(infile,s); ) {
+        ++nlines;
+    }
+   infile.close();
+   
+   infile.open(filename,std::ifstream::in);
+   // count number of lines first
+   int number_pim_bins = nlines ;
+    
+   if(VERBOSE) cout << " Number of lines in  " <<  filename << " is = " << number_pip_bins << endl;
+    
 
- for(int i=0 ; i<number_pim_bins ; ++i )
-{ 
+   // format of the pseudo-data
+   // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section 	
+   for( int i = 0; i < number_pip_bins; i++){
+	int nbin =0;
+    infile >> nbin >> zval[i] >> xval[i] >> Q2val[i] >> ptval[i] >> UNPOLARISED_PIM[i] >> POLARISED_PIM[i] >> ERROR_POLARISED_PIM[i];
+	
+   }    
+   infile.close();
+	
+ 
+ 
+   double chi2_pim = 0;
+
+ 
+   for(int i=0 ; i<number_pim_bins ; ++i )
+   { 
 
         zit=zval[i];
         xit=xval[i];
        Q2it=Q2val[i];
       phtit=ptval[i];
 
-ROOT::Math::Functor wfunpo(&ker2_fun_po_pim_xz_N,3); 
-ROOT::Math::IntegratorMultiDim igunpo(ROOT::Math::IntegrationMultiDim::kADAPTIVE);
-igunpo.SetFunction(wfunpo);
+   ROOT::Math::Functor wfunpo(&ker2_fun_po_pim_xz_N,3); 
+   ROOT::Math::IntegratorMultiDim igunpo(ROOT::Math::IntegrationMultiDim::kADAPTIVE);
+   igunpo.SetFunction(wfunpo);
 
-double value = igunpo.Integral(a,b);
+   double value = igunpo.Integral(a,b);
 
-chi2 += pow((value/UNPOLARISED_PIM[i] - POLARISED_PIM[i]),2) / pow((ERROR_POLARISED_PIM[i]),2);
+   chi2_pim += pow((value/UNPOLARISED_PIM[i] - POLARISED_PIM[i]),2) / pow((ERROR_POLARISED_PIM[i]),2);
+   }  
+   if(VERBOSE) cout << chi2_pim << endl;
+   
+   
+   //WRITE chi2 IN A FILE
+   TString filename_write; 
+   filename_write.Form("chi2_%d.dat",set_used);
+ 
+   ofstream outfile(filename_write);
+	
+ 	
+   // write number of set used, chi2 for pi-, number of points for pi-, chi2 for pi+, number of points for pi+  and the sums	
+   outfile << set_used << " " << chi2_pim << " " << number_pim_bins << " " << chi2_pip << " "  << number_pip_bins << " "<< chi2_pim + chi2_pip  << " " << number_pim_bins + number_pip_bins << " " << endl;
+	
+	
+   outfile.close();
+   
+   // write files with transversity at 10 GeV^2 
+
+   double Q2 = 10;
+   
+   double xmin = 1.e-4;
+   double xmax = 0.999;
+   
+   int npoints = 100;
+   
+   double step = (xmax-xmin)/npoints;
 
 
-
-}  
-    cout << chi2 << endl;
+   filename_write.Form("transversity_u_%d.dat",set_used);
+ 
+   ofstream outfile_u(filename_write);
+      
+   
+   for( int i = 0; i <= npoints; i++){
+    double x = xmin + i * step;
+    outfile_u << x << " " << x * pop_u(x,Q2) << endl;  
+   }
+   
+   outfile_u.close(); 
     
-    }
+ 
+   filename_write.Form("transversity_d_%d.dat",set_used);
+ 
+   ofstream outfile_d(filename_write);
+      
+   
+   for( int i = 0; i <= npoints; i++){
+    double x = xmin + i * step;
+    outfile_d << x << " " << x * pop_d(x,Q2) << endl;  
+   }
+   
+   outfile_d.close(); 
+   
+    
+   }
 
- cout<<"done"<<endl;
+   if(VERBOSE) cout<<"done"<<endl;
 
- return 0;
+   return 0;
 }
