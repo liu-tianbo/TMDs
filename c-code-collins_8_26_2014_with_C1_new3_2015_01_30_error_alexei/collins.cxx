@@ -1165,6 +1165,7 @@ int read_data(int target_flag=3, int particle_flag=1, int flag_t=0){
 
 
 bool GENERATE_DATA = false; // generate pseudodata 
+bool GENERATE_UNPOL = false; // generate unpolarised cross sections for later use
 
 //========================================================= main
 int main(int argc, char **argv)
@@ -1218,22 +1219,35 @@ int main(int argc, char **argv)
     } else {
       GENERATE_DATA = false;
     }
+ 
+  // FIRST argument : UNPOLARISED or NO
+ // we should be able to generate pseudodata by typing collins.exe -DATA 
+  if(strcmp(argv[1],"-UNPOL")== 0)
+    {
+      GENERATE_UNPOL = true;
+    } else {
+      GENERATE_UNPOL = false;
+    }
+ 
+ 
     
 // Second argument: which set to use
    set_used = strtol(argv[2],NULL,0); // argv[2] should go 1, 2, ..., longlist if 0 then best fit is used
    
-   if( GENERATE_DATA) {
-   
-   if(VERBOSE) cout << "Pseudo data will be generated." << endl; 
-   
-   }
-
    if(VERBOSE) cout << "Set number " << set_used << " will be used for computation." << endl; 
+   
+   
+////////////////////////////////////////////////
+////////////////////////////////////////////////
+////////////  CALCULATE UNPOLARISED CROSS SECTIONS IN ALL BINS  
+////////////////////////////////////////////////
+////////////////////////////////////////////////   
+    if(!GENERATE_DATA && GENERATE_UNPOL){
+  
+  
+    if(VERBOSE) cout << "UNpolarised cross sections will be calculated." << endl; 
  
-   if(GENERATE_DATA){
-   
     // READ DATA FROM ZHIHONG
-   
 	int target_flag = 3; // 1->p, 2->d2, 3->3he
 	int particle_flag = 1; //1->pip, 2->pim
 
@@ -1245,50 +1259,16 @@ int main(int argc, char **argv)
 
 
 
-    // START HOPPET
-    hoppetStartExtended(ymax,dy,Qmin,Qmax,dlnlnQ,nloop,order, scheme);
-
-    list_pdf_f();
-    list_ff_f();
-
-
-//BEST FIT -> par_space[0][j] j = 0,..,12
-   BNLYit=par_space[0][0];
-   Nuit=par_space[0][1];
-   Ndit=par_space[0][2];
-   auit=par_space[0][3];
-   adit=par_space[0][4];
-   buit=par_space[0][5];
-   bdit=par_space[0][6];
-
-   Nuit_t=par_space[0][7];
-   Ndit_t=par_space[0][8];
-   auit_t=par_space[0][9];
-   adit_t=par_space[0][10];
-   buit_t=par_space[0][11];
-   bdit_t=par_space[0][12];
-
- 
-
-
-   double asQ0 = as(2.4), Q0=sqrt(2.4);
-
-   hoppetEvolve(asQ0, Q0, nloop, 1.0, heralhc_init, Q0);  
-
-
-
    //number_pip_bins= 3;
    //CALCULATE UNPOLARISED CROSS-SECTION IN EACH BIN
    UNPOLARISED_N_PIP ( number_pip_bins,  zval, xval, Q2val, ptval);
 
 
-   //CALCULATE ASYMMETRY IN EACH BIN
-   POLARISED_N_PIP ( number_pip_bins,  zval, xval, Q2val, ptval);
 
+   //WRITE ALL UNPOLARISED CROSS SECTIONS IN A DATA FILE
 
-   //WRITE ALL DATA IN A DATA FILE
-
-   TString filename = "solid_data_3he_pip.dat";
+   TString filename="solid_unpolarised_3he_pip.dat"; 
+    
  
    ofstream outfile(filename);
 	
@@ -1297,7 +1277,7 @@ int main(int argc, char **argv)
 	
   for( int i = 0; i < number_pip_bins; i++){
 	
-   outfile << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIP[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i]*Astat[i] << endl;
+   outfile << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIP[i] << endl;
 	
 	
    }
@@ -1317,13 +1297,9 @@ int main(int argc, char **argv)
    UNPOLARISED_N_PIM ( number_pim_bins,  zval, xval, Q2val, ptval);
 
 
-   //CALCULATE ASYMMETRY IN EACH BIN
-   POLARISED_N_PIM ( number_pim_bins,  zval, xval, Q2val, ptval);
-
 
    //WRITE ALL DATA IN A DATA FILE
-
-   filename = "solid_data_3he_pim.dat";
+   filename ="solid_unpolarised_3he_pim.dat";
  
    ofstream outfile1(filename);
 	
@@ -1332,7 +1308,202 @@ int main(int argc, char **argv)
 	
   for( int i = 0; i < number_pip_bins; i++){
 	
-   outfile1 << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIM[i] << " " << POLARISED_PIM[i]/UNPOLARISED_PIM[i] << " " << POLARISED_PIM[i]/UNPOLARISED_PIM[i]*Astat[i] << endl;
+   outfile1 << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIM[i] << endl;
+	
+	
+   }
+    
+   outfile1.close();
+
+    }
+ 
+   
+   
+////////////////////////////////////////////////
+////////////////////////////////////////////////
+////////////  CALCULATE VALUES IN ALL BINS USING PSEUDO PARAMETERS
+////////////////////////////////////////////////
+////////////////////////////////////////////////   
+    if(GENERATE_DATA && !GENERATE_UNPOL){
+  
+  
+    if(VERBOSE) cout << "Pseudo data will be generated." << endl; 
+    
+    
+    
+    
+    // read UNPOLARISED cross sections first  PI+
+    TString filename = "solid_unpolarised_3he_pip.dat";
+ 
+ 
+    ifstream infile(filename);
+    
+    // count number of lines first
+    int nlines = 0;
+    
+    for (string s; getline(infile,s); ) {
+        ++nlines;
+    }
+   infile.close();
+   
+   infile.open(filename,std::ifstream::in);
+   // count number of lines first
+   int number_pip_bins = nlines ;
+    
+   if(VERBOSE) cout << " Number of lines in  " <<  filename << " is = " << number_pip_bins << endl;
+    
+
+   // format of the pseudo-data
+   // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section 	
+   for( int i = 0; i < number_pip_bins; i++){
+	int nbin =0;
+    infile >> nbin >> zval[i] >> xval[i] >> Q2val[i] >> ptval[i] >> UNPOLARISED_PIP[i];
+    
+    if (x_min_jlab >= xval[i]) x_min_jlab = xval[i]; //min value at JLAB
+    if (x_max_jlab <= xval[i]) x_max_jlab = xval[i]; //max value at JLAB
+   
+	
+   }    
+   infile.close();
+   
+   
+   
+   // PI- data now:
+  filename = "solid_unpolarised_3he_pim.dat";
+ 
+  infile.open(filename,std::ifstream::in);
+    
+    // count number of lines first
+    nlines = 0;
+    
+    for (string s; getline(infile,s); ) {
+        ++nlines;
+    }
+   infile.close();
+   
+   infile.open(filename,std::ifstream::in);
+   // count number of lines first
+   int number_pim_bins = nlines ;
+    
+   if(VERBOSE) cout << " Number of lines in  " <<  filename << " is = " << number_pip_bins << endl;
+    
+
+   // format of the pseudo-data
+   // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section 	
+   for( int i = 0; i < number_pim_bins; i++){
+	int nbin =0;
+    infile >> nbin >> zval[i] >> xval[i] >> Q2val[i] >> ptval[i] >> UNPOLARISED_PIM[i];
+    
+    if (x_min_jlab >= xval[i]) x_min_jlab = xval[i]; //min value at JLAB
+    if (x_max_jlab <= xval[i]) x_max_jlab = xval[i]; //max value at JLAB
+
+	
+   }    
+   infile.close();
+    
+    
+ 
+    // READ DATA FROM ZHIHONG
+	int target_flag = 3; // 1->p, 2->d2, 3->3he
+	int particle_flag = 1; //1->pip, 2->pim
+
+	int flag_t = 1; //1->Colllins, 2->Sivers,3->Pretzelosity
+	
+	int number_pip_bins1 = read_data(target_flag, particle_flag, flag_t); // READ SOLID DATA
+	
+	if(VERBOSE) cout << "Total number of pi+ data points is " << number_pip_bins << endl;
+
+
+
+    // START HOPPET
+    hoppetStartExtended(ymax,dy,Qmin,Qmax,dlnlnQ,nloop,order, scheme);
+
+    list_pdf_f();
+    list_ff_f();
+
+
+//BEST FIT -> par_space[0][j] j = 0,..,12
+   BNLYit=par_space[set_used][0];
+   Nuit=par_space[set_used][1];
+   Ndit=par_space[set_used][2];
+   auit=par_space[set_used][3];
+   adit=par_space[set_used][4];
+   buit=par_space[set_used][5];
+   bdit=par_space[set_used][6];
+
+   Nuit_t=par_space[set_used][7];
+   Ndit_t=par_space[set_used][8];
+   auit_t=par_space[set_used][9];
+   adit_t=par_space[set_used][10];
+   buit_t=par_space[set_used][11];
+   bdit_t=par_space[set_used][12];
+
+ 
+
+
+   double asQ0 = as(2.4), Q0=sqrt(2.4);
+
+   hoppetEvolve(asQ0, Q0, nloop, 1.0, heralhc_init, Q0);  
+
+
+   // CALCULATE TENSOR CHARGE
+   double x_min_tens = 1.e-5; // limits for integration of tensor charge in the whole region
+   double x_max_tens = 0.9999;
+   double tensor_up        = tensorcharge_up(x_min_tens,x_max_tens);
+   double tensor_down      = tensorcharge_down(x_min_tens,x_max_tens);
+   double tensor_up_jlab   = tensorcharge_up(x_min_jlab,x_max_jlab);
+   double tensor_down_jlab = tensorcharge_down(x_min_jlab,x_max_jlab);
+   
+ 
+
+   //CALCULATE ASYMMETRY IN EACH BIN
+   POLARISED_N_PIP ( number_pip_bins,  zval, xval, Q2val, ptval);
+
+
+   //WRITE ALL DATA IN A DATA FILE
+
+   
+   filename.Form("solid_data_3he_pip_%d.dat",set_used);
+ 
+   ofstream outfile(filename);
+	
+   // format of the pseudo-data
+   // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section
+	
+  for( int i = 0; i < number_pip_bins; i++){
+	
+   outfile << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIP[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i]*Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " << endl;
+	
+	
+   }
+    
+   outfile.close();
+    
+
+   particle_flag = 2; //1->pip, 2->pim
+
+   int number_pim_bins1 = read_data(target_flag, particle_flag, flag_t); // READ SOLID DATA
+	
+   if(VERBOSE) cout << "Total number of pi- data points is " << number_pim_bins << endl;
+
+    
+  
+
+   //CALCULATE ASYMMETRY IN EACH BIN
+   POLARISED_N_PIM ( number_pim_bins,  zval, xval, Q2val, ptval);
+
+
+   //WRITE ALL DATA IN A DATA FILE
+   filename.Form("solid_data_3he_pim_%d.dat",set_used);
+ 
+   ofstream outfile1(filename);
+	
+   // format of the pseudo-data
+   // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section
+	
+  for( int i = 0; i < number_pip_bins; i++){
+	
+   outfile1 << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIM[i] << " " << POLARISED_PIM[i]/UNPOLARISED_PIM[i] << " " << POLARISED_PIM[i]/UNPOLARISED_PIM[i]*Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " <<endl;
 	
 	
    }
@@ -1340,16 +1511,64 @@ int main(int argc, char **argv)
    outfile1.close();
    
    
+   
+	
+	
+   outfile.close();
+   
+   // write files with transversity at 10 GeV^2 
+   double Q2 = 10;
+   
+   double xmin = 1.e-4;
+   double xmax = 0.999;
+   
+   int npoints = 100;
+   
+   double step = (xmax-xmin)/npoints;
+
+   TString filename_write;
+   filename_write.Form("transversity_u_%d.dat",set_used);
+ 
+   ofstream outfile_u(filename_write);
+      
+   
+   for( int i = 0; i <= npoints; i++){
+    double x = xmin + i * step;
+    outfile_u << x << " " << x * pop_u(x,Q2) << endl;  
+   }
+   
+   outfile_u.close(); 
+    
+ 
+   filename_write.Form("transversity_d_%d.dat",set_used);
+ 
+   ofstream outfile_d(filename_write);
+      
+   
+   for( int i = 0; i <= npoints; i++){
+    double x = xmin + i * step;
+    outfile_d << x << " " << x * pop_d(x,Q2) << endl;  
+   }
+   
+   outfile_d.close(); 
+   
+   
 
 
     }
 
+
  // we will use just one set of parameters at a time
-    if(!GENERATE_DATA){
+////////////////////////////////////////////////
+////////////////////////////////////////////////
+////////////  CALCULATE CHI2 FOR PSEUDO PARAMETERS USING PSEUDO DATA 0 -- NOT USED IN ACTUAL COMPUTATIONS
+////////////////////////////////////////////////
+////////////////////////////////////////////////   
+    if(!GENERATE_DATA && !GENERATE_UNPOL){
     
     // read generated data first
     
-    TString filename = "solid_data_3he_pip.dat";
+    TString filename = "solid_data_3he_pip_0.dat";
  
  
     ifstream infile(filename);
@@ -1452,7 +1671,7 @@ int main(int argc, char **argv)
 
 
 // PI- data now:
-  filename = "solid_data_3he_pim.dat";
+  filename = "solid_data_3he_pim_0.dat";
  
   infile.open(filename,std::ifstream::in);
     
@@ -1473,7 +1692,7 @@ int main(int argc, char **argv)
 
    // format of the pseudo-data
    // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section 	
-   for( int i = 0; i < number_pip_bins; i++){
+   for( int i = 0; i < number_pim_bins; i++){
 	int nbin =0;
     infile >> nbin >> zval[i] >> xval[i] >> Q2val[i] >> ptval[i] >> UNPOLARISED_PIM[i] >> POLARISED_PIM[i] >> ERROR_POLARISED_PIM[i];
     
