@@ -1306,7 +1306,7 @@ int main(int argc, char **argv)
    // format of the pseudo-data
    // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section
 	
-  for( int i = 0; i < number_pip_bins; i++){
+  for( int i = 0; i < number_pim_bins; i++){
 	
    outfile1 << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIM[i] << endl;
 	
