@@ -1170,7 +1170,8 @@ bool GENERATE_UNPOL = false; // generate unpolarised cross sections for later us
 //========================================================= main
 int main(int argc, char **argv)
 {
-   const int long_list = 2000; // number of parameter sets generated
+   //const int long_list = 2000; // number of parameter sets generated
+   const int long_list = 20000; // number of parameter sets generated
    int set_used = 0; // best fit
      
    double par_space[long_list][13]; // each line consists of 14 parameters
@@ -1463,7 +1464,7 @@ int main(int argc, char **argv)
    //WRITE ALL DATA IN A DATA FILE
 
    
-   filename.Form("solid_data_3he_pip_%d.dat",set_used);
+   filename.Form("./results/solid_data_3he_pip_%d.dat",set_used);
  
    ofstream outfile(filename);
 	
@@ -1494,7 +1495,7 @@ int main(int argc, char **argv)
 
 
    //WRITE ALL DATA IN A DATA FILE
-   filename.Form("solid_data_3he_pim_%d.dat",set_used);
+   filename.Form("./results/solid_data_3he_pim_%d.dat",set_used);
  
    ofstream outfile1(filename);
 	
@@ -1527,7 +1528,7 @@ int main(int argc, char **argv)
    double step = (xmax-xmin)/npoints;
 
    TString filename_write;
-   filename_write.Form("transversity_u_%d.dat",set_used);
+   filename_write.Form("./results/transversity_u_%d.dat",set_used);
  
    ofstream outfile_u(filename_write);
       
@@ -1540,7 +1541,7 @@ int main(int argc, char **argv)
    outfile_u.close(); 
     
  
-   filename_write.Form("transversity_d_%d.dat",set_used);
+   filename_write.Form("./results/transversity_d_%d.dat",set_used);
  
    ofstream outfile_d(filename_write);
       
@@ -1568,7 +1569,7 @@ int main(int argc, char **argv)
     
     // read generated data first
     
-    TString filename = "solid_data_3he_pip_0.dat";
+    TString filename = "./results/solid_data_3he_pip_0.dat";
  
  
     ifstream infile(filename);
@@ -1671,7 +1672,7 @@ int main(int argc, char **argv)
 
 
 // PI- data now:
-  filename = "solid_data_3he_pim_0.dat";
+  filename = "./results/solid_data_3he_pim_0.dat";
  
   infile.open(filename,std::ifstream::in);
     
@@ -1758,7 +1759,7 @@ int main(int argc, char **argv)
    double step = (xmax-xmin)/npoints;
 
 
-   filename_write.Form("transversity_u_%d.dat",set_used);
+   filename_write.Form("./results/transversity_u_%d.dat",set_used);
  
    ofstream outfile_u(filename_write);
       
@@ -1771,7 +1772,7 @@ int main(int argc, char **argv)
    outfile_u.close(); 
     
  
-   filename_write.Form("transversity_d_%d.dat",set_used);
+   filename_write.Form("./results/transversity_d_%d.dat",set_used);
  
    ofstream outfile_d(filename_write);
       
