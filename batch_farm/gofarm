@@ -45,15 +45,10 @@ if ! [ -d batch_files ]
     rm -f batch_files/batch_${rnum}
     echo "#!/bin/sh" > batch_files/batch_${rnum}
     echo "cd "${home}"/" >>batch_files/batch_${rnum}
-	COUNT=0
-	while [ $COUNT -lt 10 ]; do
-		let rnum_sub=rnum*10+COUNT
-		echo "collins.exe -DATA "$rnum_sub" ">>batch_files/batch_${rnum}
-	    let COUNT=COUNT+1
-	done
+	echo "./batch "$rnum" ">>batch_files/batch_${rnum}
 	#  
-    chmod +x batch_files/batch_${rnum}
-    
+	chmod +x batch_files/batch_${rnum}
+
     echo "batch_files/batch_"${rnum}" has been created!"
     echo " "
     
@@ -62,7 +57,7 @@ if ! [ -d batch_files ]
 #
     rm -f batch_files/jscript_${rnum}
     echo "PROJECT     solid" > batch_files/jscript_${rnum}
-    echo "COMMAND     "$home"/batch/batch_files/batch_"${rnum} >>batch_files/jscript_${rnum}
+    echo "COMMAND     "$home"/batch_farm/batch_files/batch_"${rnum} >>batch_files/jscript_${rnum}
     echo "JOBNAME     collins_"${rnum} >>batch_files/jscript_${rnum}
     echo "TRACK       simulation" >> batch_files/jscript_${rnum}
     echo "TIME        2000" >>batch_files/jscript_${rnum}

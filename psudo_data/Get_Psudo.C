@@ -2,7 +2,7 @@ void Get_Psudo(){
 	double Z[500], xB[500], Q2[500], Pt[500], Sigma_Unp[500], Asym[500], Asym_Err[500], deltaU[500], deltaD[500], deltaU_SoLID[500], deltaD_SoLID[500];
     int Bin[500];
 
-	ifstream infile("solid_data_3he_pip_0.dat");
+	ifstream infile("solid_data_3he_pim_0.dat");
 
 	int i=0;
 	while(!(infile.eof())){
@@ -14,7 +14,7 @@ void Get_Psudo(){
 	const int Bin_Total = i-1;
 	cerr<<"--- Total Bin = "<< Bin_Total<<endl;
 
-	ofstream outfile("new_solid_data_3he_pip_0.dat");
+	ofstream outfile("new_solid_data_3he_pim_0.dat");
 	double Asym_New[Bin_Total];
 	double ChiSQ;
 	gRandom->SetSeed(0);
