@@ -46,11 +46,11 @@
 /*}}}*/
 using namespace std;
 
-void Get_Weight(){
+void GetWeight(TString Particle, double Scale_Factor=0.0){
 	/*Load the best fit values{{{*/
-	TString Particle = ""; cerr<<"Particle = (pip or pim)"; cin >> Particle;
-	//const int N_Replica = 10000;
-	const int N_Replica = 2000;
+	//TString Particle = ""; cerr<<"Particle = (pip or pim)"; cin >> Particle;
+	const int N_Replica = 10000;
+	//const int N_Replica = 2000;
 	ifstream infile0(Form("new_solid_data_3he_%s_0.dat",Particle.Data()));
 	double Z0[500], xB0[500], Q20[500], Pt0[500], Sigma_Unp0[500], Asym0[500], Asym_New0[500], Asym_Err0[500];
 	double deltaU0[500], deltaD0[500], deltaU_SoLID0[500], deltaD_SoLID0[500];
@@ -69,10 +69,8 @@ void Get_Weight(){
 	/*}}}*/
 
 	/*Load replica and calculate weight{{{*/
-	ofstream outfile(Form("weight_solid_data_3he_%s.dat",Particle.Data()));
+	ofstream outfile(Form("weight_solid_data_3he_%s_%d.dat",Particle.Data(),(int)(Scale_Factor)));
 	gRandom->SetSeed(0);
-	TH1D *h1 = new TH1D("h1","",1000, 0, 1.0);
-	TH2D *h2 = new TH2D("h2","",1000,0,1000,1000, 0, 1.0);
 	double Weight[N_Replica], ChiSQ[N_Replica];
 	double deltaU_Cal[N_Replica], deltaD_Cal[N_Replica];
 	double deltaU_SoLID_Cal[N_Replica], deltaD_SoLID_Cal[N_Replica];
@@ -81,10 +79,11 @@ void Get_Weight(){
 	double deltaU[500], deltaD[500], deltaU_SoLID[500], deltaD_SoLID[500];
 	int Bin[500];
 
-	double Scale_Factor = 0.0; cerr<<"--- Scale the Astat = "; cin >> Scale_Factor;
+//	double Scale_Factor = 0.0; cerr<<"--- Scale the Astat = "; cin >> Scale_Factor;
 	int N_Count =0;
 	TString FileName;
-	double ChiSQ_Sum=0, Weight_Sum=0;
+	double ChiSQ_Sum=1e-308;
+	double Weight_Sum=1e-308;//always starting from the smallest number to reduce round-up errors
 	for(int j=0;j<N_Replica;j++){
 		i=0;
 		FileName = Form("../collins/results/solid_data_3he_%s_%d.dat",Particle.Data(),j);
@@ -103,10 +102,10 @@ void Get_Weight(){
 			infile.close();
 			int Bin_Total = i-1;
 
-			deltaU_Cal[j]=deltaU[Bin_Total];
-			deltaD_Cal[j]=deltaD[Bin_Total];
-			deltaU_SoLID_Cal[j]=deltaU_SoLID[Bin_Total];
-			deltaD_SoLID_Cal[j]=deltaD_SoLID[Bin_Total];
+			deltaU_Cal[j]=deltaU[0];
+			deltaD_Cal[j]=deltaD[0];
+			deltaU_SoLID_Cal[j]=deltaU_SoLID[0];
+			deltaD_SoLID_Cal[j]=deltaD_SoLID[0];
 
 			ChiSQ[j] = 0;
 			for(int k=0;k<Bin_Total;k++){
@@ -119,10 +118,8 @@ void Get_Weight(){
 			Weight[j] = TMath::Exp(-0.5 * ChiSQ[j]);
 			Weight_Sum += Weight[j];
 			//if(ChiSQ[j] > 1e3) continue;
-			cerr<<Form("--- j=%10d, ChiSQ = %10.4f, Weight = %10.4f",j,ChiSQ[j], Weight[j])<<"\r";//<<endl;
+			cerr<<Form("--- j=%10d, ChiSQ = %10.6e, Weight = %10.6e",j,ChiSQ[j], Weight[j])<<"\r";//<<endl;
 
-			h1->Fill(Weight[j]);
-			h2->Fill(j,Weight[j]);
 			N_Count++;
 		}else
 			cerr<<Form("*** File %s doesn't exist, skip!", FileName.Data())<<endl;
@@ -131,9 +128,10 @@ void Get_Weight(){
 	/*}}}*/
 	
 	/*Fill into ROOT trees{{{*/
-	double iAsym,iAsymErr,iChiSQ,iW,iD,iU,iZ,iX,iQ2,iPt,iD_SoLID,iU_SoLID,iSigma, iHu, iHd;
+	cerr<<endl<<endl<<"--- Start to fill data into trees ..."<<endl;
+	double iAsym,iAsymErr,iChiSQ,iW,iD,iU,iD0,iU0,iZ,iX,iQ2,iPt,iD_SoLID,iU_SoLID,iSigma, iHu, iHd, iHu0, iHd0;
 	int iBin, iN;
-	TFile *file = new TFile(Form("Weight_F%d_new.root",(int)(Scale_Factor)),"recreate");
+	TFile *file = new TFile(Form("Weight_F%d_%s.root",(int)(Scale_Factor),Particle.Data()),"recreate");
 	TTree *T = new TTree("T","T");
 	TTree *W = new TTree("W","W");
 	TTree *H = new TTree("H","H");
@@ -148,6 +146,8 @@ void Get_Weight(){
 	T->Branch("iSigma", &iSigma, "iSigma/D");
 	T->Branch("iU", &iU, "iU/D");
 	T->Branch("iD", &iD, "iD/D");
+	T->Branch("iU0", &iU0, "iU0/D");
+	T->Branch("iD0", &iD0, "iD0/D");
 	T->Branch("iU_SoLID", &iU_SoLID, "iU_SoLID/D");
 	T->Branch("iD_SoLID", &iD_SoLID, "iD_SoLID/D");
 	T->Branch("iW", &iW, "iW/D");
@@ -156,19 +156,33 @@ void Get_Weight(){
 	W->Branch("iW", &iW, "iW/D");
 	W->Branch("iU", &iU, "iU/D");
 	W->Branch("iD", &iD, "iD/D");
+	W->Branch("iU0", &iU0, "iU0/D");
+	W->Branch("iD0", &iD0, "iD0/D");
+	W->Branch("iU_SoLID", &iU_SoLID, "iU_SoLID/D");
+	W->Branch("iD_SoLID", &iD_SoLID, "iD_SoLID/D");
+	W->Branch("iN", &iN, "iN/I");
 
 	H->Branch("iHu", &iHu, "iHu/D");
 	H->Branch("iHd", &iHd, "iHd/D");
-	H->Branch("iX", &iX, "iX/D");
+	H->Branch("iHu0", &iHu0, "iHu0/D");
+	H->Branch("iHd0", &iHd0, "iHd0/D");
+		H->Branch("iX", &iX, "iX/D");
 	H->Branch("iW", &iW, "iW/D");
 	H->Branch("iN", &iN, "iN/I");
+	H->Branch("iBin", &iBin, "iBin/I");
 
 	for(int j=0;j<N_Replica;j++){
+		//Note: weights have been normalized here; Don't normalized again.
 		Weight[j] /=Weight_Sum;
 		iChiSQ = ChiSQ[j];
 		iW = Weight[j];
 		iU = deltaU_Cal[j];
 		iD = deltaD_Cal[j];
+		iU0 = deltaU_Cal[0];
+		iD0 = deltaD_Cal[0];
+		iU_SoLID = deltaU_SoLID[j];
+		iD_SoLID = deltaD_SoLID[j];
+		iN = j;
 		W->Fill();
 			
 		outfile<<Form("%10d %10.4f %10.4f %10.4e %10.4e %10.4e %10.4e",j,ChiSQ[j], Weight[j],deltaU_Cal[j],deltaD_Cal[j],deltaU_SoLID_Cal[j],deltaD_SoLID_Cal[j])<<endl;
@@ -198,6 +212,8 @@ void Get_Weight(){
 				iAsymErr = Asym_Err[i];
 				iU = deltaU[i];
 				iD = deltaD[i];
+				iU0 = deltaU[0];
+				iD0 = deltaD[0];
 				iU_SoLID = deltaU_SoLID[i];
 				iD_SoLID = deltaD_SoLID[i];
 				iW = Weight[j];
@@ -220,7 +236,11 @@ void Get_Weight(){
 			for(int l=0;l<101;l++){
 				infile0 >> iX >> iHu;
 				infile1 >> iX >> iHd;
+				if(j==0){
+					iHu0 = iHu;	iHd0 = iHd;	
+				}
 				iN = j;
+				iBin = l;
 				iW = Weight[j];
 				H->Fill();
 			}
@@ -237,28 +257,29 @@ void Get_Weight(){
 	double deltaU_Exp_SoLID=0.0, deltaD_Exp_SoLID=0.0;
 	double deltaU_Vol_SoLID=0.0, deltaD_Vol_SoLID=0.0;
 	for(int j=0;j<N_Count;j++){
-		deltaU_Exp += 1/N_Count * deltaU_Cal[j];	
-		deltaD_Exp += 1/N_Count * deltaD_Cal[j];	
-		deltaU_Exp_SoLID += Weight[j] * deltaU_Cal[j];	
-		deltaD_Exp_SoLID += Weight[j] * deltaD_Cal[j];	
+		deltaU_Exp += 1./N_Count * deltaU_Cal[j];	
+		deltaD_Exp += 1./N_Count * deltaD_Cal[j];	
+		deltaU_Exp_SoLID += Weight[j] * deltaU_SoLID_Cal[j];	
+		deltaD_Exp_SoLID += Weight[j] * deltaD_SoLID_Cal[j];	
 	}
 
 	for(int j=0;j<N_Count;j++){
 		deltaU_Vol += 1./N_Count* pow((deltaU_Cal[j]-deltaU_Exp),2);
 		deltaD_Vol += 1./N_Count* pow((deltaD_Cal[j]-deltaD_Exp),2);
-		deltaU_Vol_SoLID += Weight[j] * pow((deltaU_Cal[j]-deltaU_Exp),2);
-		deltaD_Vol_SoLID += Weight[j] * pow((deltaD_Cal[j]-deltaD_Exp),2);
+		deltaU_Vol_SoLID += Weight[j] * pow((deltaU_SoLID_Cal[j]-deltaU_Exp_SoLID),2);
+		deltaD_Vol_SoLID += Weight[j] * pow((deltaD_SoLID_Cal[j]-deltaD_Exp_SoLID),2);
 	}
 	cerr<<Form("  All: dU = %8.5f, du_V = %8.5f, dD=%8.5f, dD_V=%8.5f", deltaU_Exp,deltaU_Vol, deltaD_Exp,deltaD_Vol)<<endl;
 	cerr<<Form("SoLID: dU = %8.5f, du_V = %8.5f, dD=%8.5f, dD_V=%8.5f", deltaU_Exp_SoLID,deltaU_Vol_SoLID, deltaD_Exp_SoLID,deltaD_Vol_SoLID)<<endl;
 	/*}}}*/
+}
 
-	/*Plotting{{{*/
-	/*
-	TCanvas *c1 = new TCanvas("c1","c1",800,600);
-	c1->Divide(1,2);
-	c1->cd(1); h1->Draw();
-	c1->cd(2); h2->Draw();
-
-	/*}}}*/
+int main(){
+  double Scale[9]={1000,900,800,700,600,500,400,300,200};
+  for(int i=0;i<9;i++){
+     GetWeight("pip",Scale[i]);
+  }
+  for(int i=0;i<9;i++){
+     GetWeight("pim",Scale[i]);
+  }
 }
