@@ -17,8 +17,8 @@ at each kinematical bin
 
 it also stores values of Transversity is in
 
-transversity_u_10.dat
-transversity_d_10.dat
+transversity_u_N.dat
+transversity_d_N.dat
 
 The format
 
@@ -30,27 +30,4 @@ and tensor charges
 
 
 
-// REDUNDANT NO USE
-collins.exe -NO 10
-
-will use parameter set 10 and calculate chi^2 and store information on transversity U and D and the values for tensor charge at 10 GeV^2
-
-The values of chi2 are in a file
-
-chi2_10.dat
-
-The format is 
-
-set_number set_used   chi2_pim  number_pim_bins  chi2_pip   number_pip_bins   chi2_pim + chi2_pip   number_pim_bins + number_pip_bins 
-
-
-Transversity is in
-
-transversity_u_10.dat
-transversity_d_10.dat
-
-The format
-
-x x*h_u(x)
-
-x x*h_d(x)
+ 

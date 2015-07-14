@@ -1449,6 +1449,10 @@ int main(int argc, char **argv)
    // CALCULATE TENSOR CHARGE
    double x_min_tens = 1.e-5; // limits for integration of tensor charge in the whole region
    double x_max_tens = 0.9999;
+   
+   
+   cout << "x_min_jlab = " << x_min_jlab << " x_max_jlab = " << x_max_jlab  << endl;
+   
    double tensor_up        = tensorcharge_up(x_min_tens,x_max_tens);
    double tensor_down      = tensorcharge_down(x_min_tens,x_max_tens);
    double tensor_up_jlab   = tensorcharge_up(x_min_jlab,x_max_jlab);
@@ -1472,7 +1476,7 @@ int main(int argc, char **argv)
 	
   for( int i = 0; i < number_pip_bins; i++){
 	
-   outfile << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIP[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i]*Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " << endl;
+   outfile << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIP[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i] << " " << Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " << endl;
 	
 	
    }
@@ -1503,7 +1507,7 @@ int main(int argc, char **argv)
 	
   for( int i = 0; i < number_pip_bins; i++){
 	
-   outfile1 << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIM[i] << " " << POLARISED_PIM[i]/UNPOLARISED_PIM[i] << " " << POLARISED_PIM[i]/UNPOLARISED_PIM[i]*Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " <<endl;
+   outfile1 << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIM[i] << " " << POLARISED_PIM[i]/UNPOLARISED_PIM[i] << " " << Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " <<endl;
 	
 	
    }
@@ -1558,233 +1562,6 @@ int main(int argc, char **argv)
     }
 
 
- // we will use just one set of parameters at a time
-////////////////////////////////////////////////
-////////////////////////////////////////////////
-////////////  CALCULATE CHI2 FOR PSEUDO PARAMETERS USING PSEUDO DATA 0 -- NOT USED IN ACTUAL COMPUTATIONS
-////////////////////////////////////////////////
-////////////////////////////////////////////////   
-    if(!GENERATE_DATA && !GENERATE_UNPOL){
-    
-    // read generated data first
-    
-    TString filename = "solid_data_3he_pip_0.dat";
- 
- 
-    ifstream infile(filename);
-    
-    // count number of lines first
-    int nlines = 0;
-    
-    for (string s; getline(infile,s); ) {
-        ++nlines;
-    }
-   infile.close();
-   
-   infile.open(filename,std::ifstream::in);
-   // count number of lines first
-   int number_pip_bins = nlines ;
-    
-   if(VERBOSE) cout << " Number of lines in  " <<  filename << " is = " << number_pip_bins << endl;
-    
-
-   // format of the pseudo-data
-   // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section 	
-   for( int i = 0; i < number_pip_bins; i++){
-	int nbin =0;
-    infile >> nbin >> zval[i] >> xval[i] >> Q2val[i] >> ptval[i] >> UNPOLARISED_PIP[i] >> POLARISED_PIP[i] >> ERROR_POLARISED_PIP[i];
-    
-    if (x_min_jlab >= xval[i]) x_min_jlab = xval[i]; //min value at JLAB
-    if (x_max_jlab <= xval[i]) x_max_jlab = xval[i]; //max value at JLAB
-   
-	
-   }    
-   infile.close();
-
-  
-  
-
-  
-  
-      // START HOPPET
-    hoppetStartExtended(ymax,dy,Qmin,Qmax,dlnlnQ,nloop,order, scheme);
-
-    list_pdf_f();
-    list_ff_f();
-
-
-//BEST FIT -> par_space[0][j] j = 0,..,12
-   BNLYit=par_space[set_used][0];
-   Nuit=par_space[set_used][1];
-   Ndit=par_space[set_used][2];
-   auit=par_space[set_used][3];
-   adit=par_space[set_used][4];
-   buit=par_space[set_used][5];
-   bdit=par_space[set_used][6];
-
-   Nuit_t=par_space[set_used][7];
-   Ndit_t=par_space[set_used][8];
-   auit_t=par_space[set_used][9];
-   adit_t=par_space[set_used][10];
-   buit_t=par_space[set_used][11];
-   bdit_t=par_space[set_used][12];
-
- 
-
-
-   double asQ0 = as(2.4), Q0=sqrt(2.4);
-
-   hoppetEvolve(asQ0, Q0, nloop, 1.0, heralhc_init, Q0);  
-
-
-  
-    
-   Sit=S_Jlab12;
-   double a[3] =  {b_l   ,0  ,0 };
-
-   double b[3] =  {b_u   ,1  ,1 };
-
-   double chi2_pip = 0;
-  
-  
- 
-   for(int i=0 ; i<number_pip_bins ; ++i )
-   { 
-
-        zit=zval[i];
-        xit=xval[i];
-       Q2it=Q2val[i];
-      phtit=ptval[i];
-
-   ROOT::Math::Functor wfunpo(&ker2_fun_po_pip_xz_N,3); 
-   ROOT::Math::IntegratorMultiDim igunpo(ROOT::Math::IntegrationMultiDim::kADAPTIVE);
-   igunpo.SetFunction(wfunpo);
-
-   double value = igunpo.Integral(a,b);
-
-   chi2_pip += pow((value/UNPOLARISED_PIP[i] - POLARISED_PIP[i]),2) / pow((ERROR_POLARISED_PIP[i]),2);
-   }  
- 
-   if(VERBOSE) cout << chi2_pip << endl;
-    
-    
-
-
-// PI- data now:
-  filename = "solid_data_3he_pim_0.dat";
- 
-  infile.open(filename,std::ifstream::in);
-    
-    // count number of lines first
-    nlines = 0;
-    
-    for (string s; getline(infile,s); ) {
-        ++nlines;
-    }
-   infile.close();
-   
-   infile.open(filename,std::ifstream::in);
-   // count number of lines first
-   int number_pim_bins = nlines ;
-    
-   if(VERBOSE) cout << " Number of lines in  " <<  filename << " is = " << number_pip_bins << endl;
-    
-
-   // format of the pseudo-data
-   // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section 	
-   for( int i = 0; i < number_pim_bins; i++){
-	int nbin =0;
-    infile >> nbin >> zval[i] >> xval[i] >> Q2val[i] >> ptval[i] >> UNPOLARISED_PIM[i] >> POLARISED_PIM[i] >> ERROR_POLARISED_PIM[i];
-    
-    if (x_min_jlab >= xval[i]) x_min_jlab = xval[i]; //min value at JLAB
-    if (x_max_jlab <= xval[i]) x_max_jlab = xval[i]; //max value at JLAB
-
-	
-   }    
-   infile.close();
-	
- 
- 
-   double chi2_pim = 0;
-
- 
-   for(int i=0 ; i<number_pim_bins ; ++i )
-   { 
-
-        zit=zval[i];
-        xit=xval[i];
-       Q2it=Q2val[i];
-      phtit=ptval[i];
-
-   ROOT::Math::Functor wfunpo(&ker2_fun_po_pim_xz_N,3); 
-   ROOT::Math::IntegratorMultiDim igunpo(ROOT::Math::IntegrationMultiDim::kADAPTIVE);
-   igunpo.SetFunction(wfunpo);
-
-   double value = igunpo.Integral(a,b);
-
-   chi2_pim += pow((value/UNPOLARISED_PIM[i] - POLARISED_PIM[i]),2) / pow((ERROR_POLARISED_PIM[i]),2);
-   }  
-   if(VERBOSE) cout << chi2_pim << endl;
-   
-   
-   //WRITE chi2 IN A FILE
-   TString filename_write; 
-   filename_write.Form("chi2_%d.dat",set_used);
- 
-   ofstream outfile(filename_write);
-
-   double x_min_tens = 1.e-5; // limits for integration of tensor charge in the whole region
-   double x_max_tens = 0.9999;
- 	
- 	
- 	   if(VERBOSE) cout << "x_min_jlab =  " <<  x_min_jlab << ", x_max_jlab = " << x_max_jlab << endl;
-
- 	
-   // write number of set used, chi2 for pi-, number of points for pi-, chi2 for pi+, number of points for pi+  and the sums, tensor_up[0,1], tensor_down[0,1], tensor_up[x_min_jlab,x_max_jlab], 	tensor_down[x_min_jlab,x_max_jlab]
-   outfile << set_used << " " << chi2_pim << " " << number_pim_bins << " " << chi2_pip << " "  << number_pip_bins << " "<< chi2_pim + chi2_pip  << " " << number_pim_bins + number_pip_bins << " " << tensorcharge_up(x_min_tens,x_max_tens) << " " << tensorcharge_down(x_min_tens,x_max_tens) << " " << tensorcharge_up(x_min_jlab,x_max_jlab) << " " << tensorcharge_down(x_min_jlab,x_max_jlab) << endl;
-	
-	
-   outfile.close();
-   
-   // write files with transversity at 10 GeV^2 
-
-   double Q2 = 10;
-   
-   double xmin = 1.e-4;
-   double xmax = 0.999;
-   
-   int npoints = 100;
-   
-   double step = (xmax-xmin)/npoints;
-
-
-   filename_write.Form("transversity_u_%d.dat",set_used);
- 
-   ofstream outfile_u(filename_write);
-      
-   
-   for( int i = 0; i <= npoints; i++){
-    double x = xmin + i * step;
-    outfile_u << x << " " << x * pop_u(x,Q2) << endl;  
-   }
-   
-   outfile_u.close(); 
-    
- 
-   filename_write.Form("transversity_d_%d.dat",set_used);
- 
-   ofstream outfile_d(filename_write);
-      
-   
-   for( int i = 0; i <= npoints; i++){
-    double x = xmin + i * step;
-    outfile_d << x << " " << x * pop_d(x,Q2) << endl;  
-   }
-   
-   outfile_d.close(); 
-   
-    
-   }
 
    if(VERBOSE) cout<<"done"<<endl;
 
