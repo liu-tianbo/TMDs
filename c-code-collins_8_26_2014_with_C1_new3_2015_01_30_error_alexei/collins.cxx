@@ -1476,7 +1476,7 @@ int main(int argc, char **argv)
 	
   for( int i = 0; i < number_pip_bins; i++){
 	
-   outfile << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIP[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i] << " " << Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " << endl;
+   outfile << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIP[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i]*Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " << endl;
 	
 	
    }
@@ -1507,7 +1507,7 @@ int main(int argc, char **argv)
 	
   for( int i = 0; i < number_pip_bins; i++){
 	
-   outfile1 << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIM[i] << " " << POLARISED_PIM[i]/UNPOLARISED_PIM[i] << " " << Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " <<endl;
+   outfile1 << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIM[i] << " " << POLARISED_PIM[i]/UNPOLARISED_PIM[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i]*Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " <<endl;
 	
 	
    }
