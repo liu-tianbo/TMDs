@@ -1,0 +1,19 @@
+#!/usr/bin/perl
+# Perl module to run 
+############################################################
+print "Give the start run number [0~2000]\n";
+$srunnum = <STDIN>;
+chop($srunnum);
+
+print "Give the end run number [0~2000]\n";
+$erunnum = <STDIN>;
+chop($erunnum);
+
+if($srunnum<=$erunnum){
+	for($i=$srunnum;$i<=$erunnum;$i++){
+		print `./gofarm $i  \n`;
+	}
+}
+else {
+    die "End run number should be greater than start run number\n";
+}
