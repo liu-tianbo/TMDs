@@ -86,7 +86,7 @@ void GetWeight(TString Particle, double Scale_Factor=0.0){
 	double Weight_Sum=1e-308;//always starting from the smallest number to reduce round-up errors
 	for(int j=0;j<N_Replica;j++){
 		i=0;
-		FileName = Form("../collins/results/solid_data_3he_%s_%d.dat",Particle.Data(),j);
+		FileName = Form("../collins/old_results/solid_data_3he_%s_%d.dat",Particle.Data(),j);
 		ifstream infile(FileName);
 		if(infile){
 			//cerr<<"---- Reading file-->"<<FileName.Data()<<"\r";
@@ -97,6 +97,7 @@ void GetWeight(TString Particle, double Scale_Factor=0.0){
 					>> Sigma_Unp[i] >> Asym[i] >> Asym_Err[i] 
 					>> deltaU[i] >> deltaD[i] >> deltaU_SoLID[i] >> deltaD_SoLID[i]){
 				//T->Fill();
+				Asym_Err[i]/=Asym[i];
 				i++;
 			}
 			infile.close();
@@ -192,7 +193,7 @@ void GetWeight(TString Particle, double Scale_Factor=0.0){
 	for(int j=0;j<N_Replica;j++){
 		i=0;
 
-		FileName = Form("../collins/results/solid_data_3he_%s_%d.dat",Particle.Data(),j);
+		FileName = Form("../collins/old_results/solid_data_3he_%s_%d.dat",Particle.Data(),j);
 		ifstream infile(FileName);
 		if(infile){
 			//cerr<<"---- Reading file-->"<<FileName.Data()<<endl;
@@ -224,12 +225,13 @@ void GetWeight(TString Particle, double Scale_Factor=0.0){
 		}
 	}
 
+	double iHu00[101],iHd00[101];
 	for(int j=0;j<N_Replica;j++){
 		i=0;
 		iN=0;
-		FileName = Form("../collins/results/transversity_u_%d.dat",j);
+		FileName = Form("../collins/old_results/transversity_u_%d.dat",j);
 		ifstream infile0(FileName);
-		FileName = Form("../collins/results/transversity_d_%d.dat",j);
+		FileName = Form("../collins/old_results/transversity_d_%d.dat",j);
 		ifstream infile1(FileName);
 		if(infile0){
 			//while(!(infile0.eof())){
@@ -237,8 +239,10 @@ void GetWeight(TString Particle, double Scale_Factor=0.0){
 				infile0 >> iX >> iHu;
 				infile1 >> iX >> iHd;
 				if(j==0){
-					iHu0 = iHu;	iHd0 = iHd;	
+					iHu00[l] = iHu;	iHd00[l] = iHd;	
 				}
+				iHu0 = iHu00[l];
+				iHd0 = iHd00[l];
 				iN = j;
 				iBin = l;
 				iW = Weight[j];

@@ -1,16 +1,24 @@
 THE USAGE OF THE PROGRAM
 
 
-collins.exe -UNPOL 0
+collins.exe -EXPERIMENT -TARGET -PARTICLE -UNPOL 0
+
+-EXPERIMENT = -SOLID
+-TARGET =   -PROTON, -NEUTRON
+-PARTICLE = -PI+ -PI-
+
+
 
 will generate unpolarised cross-sections in all bins of SOLID for pi+ and pi-.
-Stored in files 
+Stored in files for SOLID NEUTRON
 solid_unpolarised_3he_pim.dat
 solid_unpolarised_3he_pip.dat
+for SOLID PROTON 
+solid_unpolarised_p_pim.dat
+solid_unpolarised_p_pip.dat
 
 
-
-collins.exe -DATA N
+collins.exe -EXTPERIMENT -TARGET -PARTICLE -DATA N
 
 will generate and store pseudodata assigning experimental error to the calculation with parameter set N
 at each kinematical bin

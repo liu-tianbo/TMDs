@@ -1,11 +1,12 @@
 #!/usr/bin/perl
 # Perl module to run 
 ############################################################
-print "Give the start run number [0~2000]\n";
+print "Note: Each run calculates 10 points, e.g. 0 means 0~9, 1 means 10~19, 10 means 100~109 etc.\n";
+print "Give the start run number [0~3000]\n";
 $srunnum = <STDIN>;
 chop($srunnum);
 
-print "Give the end run number [0~2000]\n";
+print "Give the end run number [0~3000]\n";
 $erunnum = <STDIN>;
 chop($erunnum);
 

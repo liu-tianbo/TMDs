@@ -1824,7 +1824,7 @@ int read_data_solid(char const * directory = "", int Q2_flag_bin = 4, int z_flag
 	}
 	}
 	
-	return ncount-1; // total number of bins
+	return ncount; // total number of bins
 	
 }
 
@@ -1839,10 +1839,10 @@ bool GENERATE_UNPOL = false; // generate unpolarised cross sections for later us
 //========================================================= main
 int main(int argc, char **argv)
 {
-   const int long_list = 30000; // number of parameter sets generated
+   //const int long_list = 100000; // number of parameter sets generated
    int set_used = 0; // best fit
      
-   double par_space[long_list][13]; // each line consists of 14 parameters
+   double par_space[100000][13]; // each line consists of 13 parameters
    
    double x_min_jlab = 1.; // to store min and max value of x in SOLID
    double x_max_jlab = 0.; 
@@ -1851,20 +1851,23 @@ int main(int argc, char **argv)
 // READ THE GENERATED PARAMETER SETS BEGIN 
    ifstream infile_par ("error_estimate/new_parameters.dat" ); // this is the file with generated parameters
 
+   int j=0;
    if(infile_par.is_open()){
-    for(int j=0; j < long_list ;++j ){   	 
-     infile_par >>par_space[j][0]>>par_space[j][1]>>par_space[j][2]>>par_space[j][3]>>par_space[j][4]
+   // for(int j=0; j < long_list ;++j ){   	 
+    while(!(infile_par.eof())){
+	   infile_par >>par_space[j][0]>>par_space[j][1]>>par_space[j][2]>>par_space[j][3]>>par_space[j][4]
      >>par_space[j][5]>>par_space[j][6]>>par_space[j][7]>>par_space[j][8]>>par_space[j][9]
      >>par_space[j][10]>>par_space[j][11]>>par_space[j][12];
-   	}
+   	 j++;
+	}
    }
    else {
     cout << "Unable to open file "; 
     return 1;
    }   
    infile_par.close();
-
-// print parameters (optional)
+   int long_list = j;
+   // print parameters (optional)
   if(VERBOSE){
   for(int j=0; j < long_list ;++j ){  
    cout << j << " " ;
@@ -1997,13 +2000,13 @@ int main(int argc, char **argv)
 
     
     //CALCULATE UNPOLARISED CROSS-SECTION IN EACH BIN
-    if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("3he") && PARTICLE.EqualTo("pip") )
+    if (TARGET.EqualTo("3he") && PARTICLE.EqualTo("pip") )
        UNPOLARISED_N_PIP ( number_bins,  zval, xval, Q2val, ptval);
-    if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("3he") && PARTICLE.EqualTo("pim") )
+    if (TARGET.EqualTo("3he") && PARTICLE.EqualTo("pim") )
        UNPOLARISED_N_PIM ( number_bins,  zval, xval, Q2val, ptval);
-    if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("p") && PARTICLE.EqualTo("pip") )
+    if (TARGET.EqualTo("p") && PARTICLE.EqualTo("pip") )
        UNPOLARISED_P_PIP ( number_bins,  zval, xval, Q2val, ptval);
-    if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("p") && PARTICLE.EqualTo("pim") )
+    if (TARGET.EqualTo("p") && PARTICLE.EqualTo("pim") )
        UNPOLARISED_P_PIM ( number_bins,  zval, xval, Q2val, ptval);
 
 
@@ -2074,7 +2077,8 @@ int main(int argc, char **argv)
 
     if( number_bins != number_bins1) {
     cerr << " Number of bins generated for unpolarised data " << number_bins1 << " is different from number of experimental bins " << number_bins << endl;
-    }
+     exit(-1);
+	}
 
 
     // START HOPPET
@@ -2160,7 +2164,7 @@ int main(int argc, char **argv)
    
    int npoints = 100;
    
-   double step = (xmax-xmin)/npoints;
+   double step = (xmax-xmin)/(npoints-1);
 
    TString filename_write;
    filename_write.Form("transversity_u_%d.dat",set_used);
@@ -2168,7 +2172,7 @@ int main(int argc, char **argv)
    ofstream outfile_u(filename_write);
       
    
-   for( int i = 0; i <= npoints; i++){
+   for( int i = 0; i < npoints; i++){
     double x = xmin + i * step;
     outfile_u << x << " " << x * pop_u(x,Q2) << endl;  
    }
@@ -2181,7 +2185,7 @@ int main(int argc, char **argv)
    ofstream outfile_d(filename_write);
       
    
-   for( int i = 0; i <= npoints; i++){
+   for( int i = 0; i < npoints; i++){
     double x = xmin + i * step;
     outfile_d << x << " " << x * pop_d(x,Q2) << endl;  
    }

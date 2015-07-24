@@ -48,11 +48,13 @@ using namespace std;
 
 void Tensor(){
 //int main(){
+	gStyle->SetOptStat(0);
+	gStyle->SetOptFit(1);
 	/*Define{{{*/
 	//const int N=17;
 	//double Scale[N]={1000.,900.,800.,700.,600.,500.,400.,300.,200.,100.,90.,80.,70.,60.,50.,40.,30.};
-	const int N=9;
-	const double Scale[N]={1000.,900.,800.,700.,600.,500.,400.,300.,200.};
+	const int N=10;
+	const double Scale[N]={100.,90.,80.,70.,60.,50.,40.,30.,20.,10.};
 	double Zero[N]={N*0.};
 
     int Bin[N];	
@@ -96,14 +98,14 @@ void Tensor(){
 
 	/*Plot Tensor Charge{{{*/
 	cerr<<"--- Making Plots ..."<<endl;
-	TCanvas *c0 = new TCanvas("c0","c1",800,600);
+	TCanvas *c0 = new TCanvas("c0","c0",800,600);
 	c0->Divide(2,2);
 	c0->cd(1);	
 //	TH2D *h1 = new TH2D("h1","Tensor Charge vs Scale", 100, 0.0, 8.0, 100, 0, 0.7);
 //	h1->SetXTitle("Beam-Time (Days)");
-	TH2D *h1 = new TH2D("h1","Tensor Charge vs Scale", 100, 1.0, 1000.0, 100, 0.3, 0.5);
+	TH2D *h1 = new TH2D("h1","Tensor Charge vs Scale", 100, 0.0, 110.0, 100, 0.3, 0.5);
 	h1->SetXTitle("Scale");
-		h1->SetYTitle("#delta U");
+	h1->SetYTitle("#delta U");
 	h1->Draw();
 	TGraphErrors *gr1 = new TGraphErrors(N, Scale, deltaU_Exp_SoLID,Zero, deltaU_Vol_SoLID);
 	//TGraphErrors *gr1 = new TGraphErrors(N, Scale, deltaU_Exp_New,Zero, deltaU_Vol_New);
@@ -111,25 +113,10 @@ void Tensor(){
 	gr1->SetMarkerColor(2);
 	gr1->Draw("p");
 
-	c0->cd(3);
-	//TH2D *h2 = new TH2D("h1","Tensor Charge vs Scale", 100, 0.0, 8.0, 100, 0, 1.);
-	//h2->SetXTitle("Beam-Time (Days)");
-	
-	TH2D *h2 = new TH2D("h1","Tensor Charge vs Scale", 100, 0.0, 1000.0, 100, 0, 1.);
-	h2->SetXTitle("Scale");
-	h2->SetYTitle("#sigma(#delta U)^{SoLID}/#sigma(#delta U)^{Data}");
-	h2->Draw();
-	TGraphErrors *gr3 = new TGraphErrors(N, Scale, deltaU_R_SoLID,Zero, Zero);
-	//TGraphErrors *gr3 = new TGraphErrors(N, Scale, deltaU_R_New,Zero, Zero);
-	gr3->SetMarkerStyle(20);
-	gr3->SetMarkerColor(2);
-	gr3->Draw("p");
-	gr3->Fit("pol1");
-
 	c0->cd(2);
 	//TH2D *h11 = new TH2D("h11","Tensor Charge vs Scale", 100, 0.0, 8.0, 100, -0.50, 0.10);
 	//h11->SetXTitle("Beam-Time (Days)");
-	TH2D *h11 = new TH2D("h11","Tensor Charge vs Scale", 100, 0.0, 1000.0, 100, -0.30,-0.10);
+	TH2D *h11 = new TH2D("h11","Tensor Charge vs Scale", 100, 0.0, 110.0, 100, -0.30,-0.10);
 	h11->SetXTitle("Scale");
 	h11->SetYTitle("#delta D");
 	h11->Draw();
@@ -139,16 +126,26 @@ void Tensor(){
 	gr2->SetMarkerColor(4);
 	gr2->Draw("p");
 
+	c0->cd(3);
+	TH2D *h2 = new TH2D("h2","Tensor Charge vs Scale", 100, 0.0, 110.0, 100, 0, 1.);
+	h2->SetXTitle("Scale");
+	h2->SetYTitle("#sigma(#delta U)^{SoLID}/#sigma(#delta U)^{Data}");
+	h2->Draw();
+	TGraphErrors *gr3 = new TGraphErrors(N, Scale, deltaU_R_SoLID,Zero, Zero);
+	gr3->SetMarkerStyle(20);
+	gr3->SetMarkerColor(2);
+	gr3->Draw("p");
+	gr3->Fit("pol2","","",19,101);
+
 	c0->cd(4);	
-	TH2D *h21 = (TH2D*) h2->Clone("h21");
+	TH2D *h21 = new TH2D("h21","Tensor Charge vs Scale", 100, 0.0, 110.0, 100, 0, 1.);
 	h21->SetYTitle("#sigma(#delta U)^{SoLID}/#sigma(#delta U)^{Data}");
 	h21->Draw();
 	TGraphErrors *gr4 = new TGraphErrors(N, Scale, deltaD_R_SoLID,Zero, Zero);
-	//TGraphErrors *gr4 = new TGraphErrors(N, Scale, deltaD_R_New,Zero, Zero);
 	gr4->SetMarkerStyle(21);
 	gr4->SetMarkerColor(4);
 	gr4->Draw("p");
-	gr4->Fit("pol1");
-	c0->Print("Resol_Tensor_Charge.png");
+	gr4->Fit("pol2","","",19,101);
+	c0->Print(Form("Resol_Tensor_Charge_%s.png", Particle.Data()));
 	/*}}}*/
 }

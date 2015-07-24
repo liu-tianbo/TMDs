@@ -47,12 +47,10 @@
 using namespace std;
 
 void GetData(){
-//int main(){
+	//int main(){
 	const int N_Replica=10000;
-	//const int N=17;
-	//double Scale[N]={1000.,900.,800.,700.,600.,500.,400.,300.,200.,100.,90.,80.,70.,60.,50.,40.,30.};
-	const int N=9;
-	double Scale[N]={1000.,900.,800.,700.,600.,500.,400.,300.,200.};
+	const int N=10;
+	double Scale[N]={100.,90.,80.,70.,60.,50.,40.,30.,20.,10.};
 	double Zero[N]={N*0.};
 
 	double deltaU_Exp[N], deltaD_Exp[N];
@@ -69,8 +67,8 @@ void GetData(){
 	double Hu_Vol_SoLID[N][101], Hd_Vol_SoLID[N][101];
 
 	/*Readin Data{{{*/
-    TString Particle=""; cerr<<"--- Particle = (pip or pim) "; cin>>Particle;
-	ofstream tensor(Form("tensor_charge_%s.dat",Particle.Data()));
+	TString Particle=""; cerr<<"--- Particle = (pip or pim) "; cin>>Particle;
+	//ofstream tensor(Form("tensor_charge_%s.dat",Particle.Data()));
 	ofstream trans(Form("transversity_%s.dat",Particle.Data()));
 
 	cerr<<"--- Reading Data ..."<<endl;
@@ -119,6 +117,7 @@ void GetData(){
 		/*}}}*/
 
 		/*Tensor Charge{{{*/
+		/*
 		deltaU_Exp[i]=0.0; deltaD_Exp[i]=0.0;
 		deltaU_Vol[i]=0.0; deltaD_Vol[i]=0.0;
 		deltaU_Exp_SoLID[i]=0.0; deltaD_Exp_SoLID[i]=0.0;
@@ -130,11 +129,11 @@ void GetData(){
 			deltaD_Exp[i] += 1./N_Replica * iD;	
 			deltaU_Exp_New[i] += iW * iU;	
 			deltaD_Exp_New[i] += iW * iD;	
-//			deltaU_Exp_SoLID[i] += iW * iU_SoLID;	
-//			deltaD_Exp_SoLID[i] += iW * iD_SoLID;	
+			//			deltaU_Exp_SoLID[i] += iW * iU_SoLID;	
+			//			deltaD_Exp_SoLID[i] += iW * iD_SoLID;	
 			deltaU_Exp_SoLID[i] += iW * iU;	
 			deltaD_Exp_SoLID[i] += iW * iD;	
-			}
+		}
 		for(int j=0;j<N_W;j++){
 			W->GetEntry(j);
 			deltaU_Vol[i] += 1./N_W* pow((iU-deltaU_Exp[i]),2);
@@ -145,7 +144,7 @@ void GetData(){
 			//deltaD_Vol_SoLID[i] += iW * pow((iD_SoLID-deltaD_Exp_SoLID[i]),2);
 			deltaU_Vol_SoLID[i] += iW * pow((iU-deltaU_Exp_SoLID[i]),2);
 			deltaD_Vol_SoLID[i] += iW * pow((iD-deltaD_Exp_SoLID[i]),2);
-			}
+		}
 		deltaU_Vol[i] = sqrt(deltaU_Vol[i] );
 		deltaD_Vol[i] = sqrt(deltaD_Vol[i] );
 		deltaU_Vol_New[i] = sqrt(deltaU_Vol_New[i] );
@@ -154,12 +153,13 @@ void GetData(){
 		deltaD_Vol_SoLID[i] = sqrt(deltaD_Vol_SoLID[i] );
 		cerr<<Form("  All: dU = %8.5f +/- %8.5f, dD=%8.5f +/- %8.5f", deltaU_Exp[i],deltaU_Vol[i], deltaD_Exp[i],deltaD_Vol[i])<<endl;
 		cerr<<Form("SoLID: dU = %8.5f +/- %8.5f, dD=%8.5f +/- %8.5f", deltaU_Exp_SoLID[i],deltaU_Vol_SoLID[i], deltaD_Exp_SoLID[i],deltaD_Vol_SoLID[i])<<endl;
-		
+
 		tensor<<Form("%5d %10d %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e", 
 				i, (int)(Scale[i]), 
 				deltaU_Exp[i], deltaU_Vol[i],deltaD_Exp[i], deltaD_Vol[i],
 				deltaU_Exp_New[i], deltaU_Vol_New[i],deltaD_Exp_New[i], deltaD_Vol_New[i],
 				deltaU_Exp_SoLID[i], deltaU_Vol_SoLID[i],deltaD_Exp_SoLID[i], deltaD_Vol_SoLID[i])<<endl;
+		*/
 		/*}}}*/
 
 		/*101 Transversity Values{{{*/
@@ -190,8 +190,8 @@ void GetData(){
 				Hd_Exp_SoLID[i][l] += Weight[j][l] * Hd[j][l];	
 			}
 			X[l] = X_Temp[0][l];
-	        Hu_Org[l] = Hu[0][l];	
-	        Hd_Org[l] = Hd[0][l];	
+			Hu_Org[l] = Hu[0][l];	
+			Hd_Org[l] = Hd[0][l];	
 		}
 		for(int l=0;l<101;l++){
 			for(int j=0;j<N_Replica;j++){
@@ -204,16 +204,22 @@ void GetData(){
 			Hd_Vol[i][l] = sqrt(Hd_Vol[i][l] );
 			Hu_Vol_SoLID[i][l] = sqrt(Hu_Vol_SoLID[i][l] );
 			Hd_Vol_SoLID[i][l] = sqrt(Hd_Vol_SoLID[i][l] );
+			cerr<<Form("S=%4f Bin=%4d X=%10.6f Vol=%10.6e, Vol_SoLID=%10.6e", Scale[i], l, X[l], Hu_Vol[i][l], Hu_Vol_SoLID[i][l])<<endl;
 		}
-		for(int l=0;l<101;l++)
-			trans<<Form("%5d %5d %5d %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e", 
-					i, l, (int)(Scale[i]), X[l], Hu_Exp[i][l], Hu_Vol[i][l],Hd_Exp[i][l], Hd_Vol[i][l],
-					Hu_Exp_SoLID[i][l], Hu_Vol_SoLID[i][l],Hd_Exp_SoLID[i][l], Hd_Vol_SoLID[i][l], Hu_Org[l], Hd_Org[l])<<endl;
 		/*}}}*/
 
 		file->Close();
 	}
-	tensor.close(); trans.close();
+	//tensor.close(); 
+
+	for(int l=0;l<101;l++){
+		for(int i=0;i<N;i++){
+			trans<<Form("%5d %5d %5d %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e %10.6e", 
+					i, l, (int)(Scale[i]), X[l], Hu_Exp[i][l], Hu_Vol[i][l],Hd_Exp[i][l], Hd_Vol[i][l],
+					Hu_Exp_SoLID[i][l], Hu_Vol_SoLID[i][l],Hd_Exp_SoLID[i][l], Hd_Vol_SoLID[i][l], Hu_Org[l], Hd_Org[l])<<endl;
+		}
+	}
+	trans.close();
 	/*}}}*/
 
 }
