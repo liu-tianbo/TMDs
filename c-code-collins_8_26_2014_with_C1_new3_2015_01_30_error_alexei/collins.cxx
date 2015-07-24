@@ -558,15 +558,12 @@ const  double S_Jlab=5.9*0.94*2;
 
 const  double S_Jlab12=11.*0.94*2;
 
-double UNPOLARISED_PIP[5000]; // we will store here unpolarised cross sections
-double UNPOLARISED_PIM[5000]; // we will store here unpolarised cross sections
+double UNPOLARISED[5000]; // we will store here unpolarised cross sections
 
-double POLARISED_PIP[5000]; // we will store here polarised cross sections
-double POLARISED_PIM[5000]; // we will store here polarised cross sections
+double POLARISED[5000]; // we will store here polarised cross sections
 
-double ERROR_POLARISED_PIP[5000]; // we will store here polarised cross sections
-double ERROR_POLARISED_PIM[5000]; // we will store here polarised cross sections
 
+ 
 
 double Singma0( double Q2 , double Si ,double x )
 {
@@ -653,6 +650,138 @@ double unpopdf_dis_N(double x1, double  x2 , double xi1a, double xi2a ,double b 
 }
 
 
+double unpopdf_dis_P(double x1, double  x2 , double xi1a, double xi2a ,double b ,int fh  ,int ch   )
+{ 
+
+  //fraginid_.FINI=0;
+
+ double bm2=1.5;
+ 
+ double bs2= b*b/(1+b*b/(bm2*bm2) )/C1/C1;
+
+
+
+ double mu2=1.0/bs2;
+
+ double xi1=(1-x1)*xi1a+x1;
+ double xi2=(1-x2)*xi2a+x2;
+
+ double z1=x1/xi1;
+ double z2=x2/xi2;
+
+
+
+ double pdfuf=(1-x1)*(1-x2)*euq2*(
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*pdf(1,x1,mu2)/(1-x1) +as(mu2)/pi*pdf(1,xi1,mu2)/xi1 *2.0/3.0*(1-z1)
+                                                                            +as(mu2)/pi*pdf(0,xi1,mu2)/xi1 *1.0/2.0*(1-z1)*z1  ) *
+                          ((1+as(mu2)/pi/3.0*(-8.0 ) )*ffu(fh,ch,x2,mu2)/(1-x2) 
+                                                     +as(mu2)/pi*ffu(fh,ch,xi2,mu2)/xi2*(2.0/3.0*(1-z2)+4.0/3.0*(1+z2*z2)/(1-z2)*log(z2))
+                                                     +as(mu2)/pi*ffg(fh,ch,xi2,mu2)/xi2 *(2.0/3.0*z2 +4.0/3.0*(1+(1-z2)*(1-z2))/z2*log(z2)   )  ) + 
+
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*pdf(-1,x1,mu2)/(1-x1)+as(mu2)/pi* pdf(-1,xi1,mu2)/xi1 *2.0/3.0*(1-z1)
+                                                                            +as(mu2)/pi* pdf(0,xi1,mu2)/xi1 *1.0/2.0*(1-z1)*z1  ) *
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*ffub(fh,ch,x2,mu2)/(1-x2)
+                                                     +as(mu2)/pi*ffub(fh,ch,xi2,mu2)/xi2*(2.0/3.0*(1-z2)+4.0/3.0*(1+z2*z2)/(1-z2)*log(z2))
+                                                     +as(mu2)/pi*ffg(fh,ch,xi2,mu2)/xi2 *(2.0/3.0*z2 +4.0/3.0*(1+(1-z2)*(1-z2))/z2*log(z2)   )  ) );
+
+ double pdfdf=(1-x1)*(1-x2)*edq2*(
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*pdf(2,x1,mu2)/(1-x1) +as(mu2)/pi*pdf(2,xi1,mu2)/xi1 *2.0/3.0*(1-z1)
+                                                                            +as(mu2)/pi* pdf(0,xi1,mu2)/xi1 *1.0/2.0*(1-z1)*z1  ) *
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*ffd(fh,ch,x2,mu2)/(1-x2)
+                                                     +as(mu2)/pi*ffd(fh,ch,xi2,mu2)/xi2*(2.0/3.0*(1-z2)+4.0/3.0*(1+z2*z2)/(1-z2)*log(z2))
+                                                     +as(mu2)/pi*ffg(fh,ch,xi2,mu2)/xi2 *(2.0/3.0*z2 +4.0/3.0*(1+(1-z2)*(1-z2))/z2*log(z2)   )  ) + 
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*pdf(-2,x1,mu2)/(1-x1)
+                                                                            +as(mu2)/pi* pdf(-2,xi1,mu2)/xi1 *2.0/3.0*(1-z1)
+                                                                            +as(mu2)/pi* pdf(0,xi1,mu2)/xi1 *1.0/2.0*(1-z1)*z1  ) *
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*ffdb(fh,ch,x2,mu2)/(1-x2)
+                                                     +as(mu2)/pi*ffdb(fh,ch,xi2,mu2)/xi2*(2.0/3.0*(1-z2)+4.0/3.0*(1+z2*z2)/(1-z2)*log(z2))
+                                                     +as(mu2)/pi*ffg(fh,ch,xi2,mu2)/xi2 *(2.0/3.0*z2 +4.0/3.0*(1+(1-z2)*(1-z2))/z2*log(z2)   )  ) );
+
+
+
+ return pdfuf+pdfdf;
+
+}
+
+double unpopdf_dis_D(double x1, double  x2 , double xi1a, double xi2a ,double b ,int fh  ,int ch   )
+{ 
+
+  //fraginid_.FINI=0;
+
+ double bm2=1.5;
+ 
+ double bs2= b*b/(1+b*b/(bm2*bm2) )/C1/C1;
+
+
+
+ double mu2=1.0/bs2;
+
+ double xi1=(1-x1)*xi1a+x1;
+ double xi2=(1-x2)*xi2a+x2;
+
+ double z1=x1/xi1;
+ double z2=x2/xi2;
+
+
+
+ double pdfuf1=(1-x1)*(1-x2)*euq2*(
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*pdf(1,x1,mu2)/(1-x1) +as(mu2)/pi*pdf(1,xi1,mu2)/xi1 *2.0/3.0*(1-z1)
+                                                                            +as(mu2)/pi* pdf(0,xi1,mu2)/xi1 *1.0/2.0*(1-z1)*z1  ) *
+                          ((1+as(mu2)/pi/3.0*(-8.0 ) )*ffu(fh,ch,x2,mu2)/(1-x2) 
+                                                     +as(mu2)/pi*ffu(fh,ch,xi2,mu2)/xi2*(2.0/3.0*(1-z2)+4.0/3.0*(1+z2*z2)/(1-z2)*log(z2))
+                                                     +as(mu2)/pi*ffg(fh,ch,xi2,mu2)/xi2 *(2.0/3.0*z2 +4.0/3.0*(1+(1-z2)*(1-z2))/z2*log(z2)   )  ) + 
+
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*pdf(-1,x1,mu2)/(1-x1)+as(mu2)/pi* pdf(-1,xi1,mu2)/xi1 *2.0/3.0*(1-z1)
+                                                                            +as(mu2)/pi* pdf(0,xi1,mu2)/xi1 *1.0/2.0*(1-z1)*z1  ) *
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*ffub(fh,ch,x2,mu2)/(1-x2)
+                                                     +as(mu2)/pi*ffub(fh,ch,xi2,mu2)/xi2*(2.0/3.0*(1-z2)+4.0/3.0*(1+z2*z2)/(1-z2)*log(z2))
+                                                     +as(mu2)/pi*ffg(fh,ch,xi2,mu2)/xi2 *(2.0/3.0*z2 +4.0/3.0*(1+(1-z2)*(1-z2))/z2*log(z2)   )  ) );
+
+ double pdfuf2=(1-x1)*(1-x2)*euq2*(
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*pdf(2,x1,mu2)/(1-x1) +as(mu2)/pi*pdf(2,xi1,mu2)/xi1 *2.0/3.0*(1-z1)
+                                                                            +as(mu2)/pi* pdf(0,xi1,mu2)/xi1 *1.0/2.0*(1-z1)*z1  ) *
+                          ((1+as(mu2)/pi/3.0*(-8.0 ) )*ffu(fh,ch,x2,mu2)/(1-x2) 
+                                                     +as(mu2)/pi*ffu(fh,ch,xi2,mu2)/xi2*(2.0/3.0*(1-z2)+4.0/3.0*(1+z2*z2)/(1-z2)*log(z2))
+                                                     +as(mu2)/pi*ffg(fh,ch,xi2,mu2)/xi2 *(2.0/3.0*z2 +4.0/3.0*(1+(1-z2)*(1-z2))/z2*log(z2)   )  ) + 
+
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*pdf(-2,x1,mu2)/(1-x1)+as(mu2)/pi* pdf(-2,xi1,mu2)/xi1 *2.0/3.0*(1-z1)
+                                                                            +as(mu2)/pi* pdf(0,xi1,mu2)/xi1 *1.0/2.0*(1-z1)*z1  ) *
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*ffub(fh,ch,x2,mu2)/(1-x2)
+                                                     +as(mu2)/pi*ffub(fh,ch,xi2,mu2)/xi2*(2.0/3.0*(1-z2)+4.0/3.0*(1+z2*z2)/(1-z2)*log(z2))
+                                                     +as(mu2)/pi*ffg(fh,ch,xi2,mu2)/xi2 *(2.0/3.0*z2 +4.0/3.0*(1+(1-z2)*(1-z2))/z2*log(z2)   )  ) );
+
+ double pdfdf1=(1-x1)*(1-x2)*edq2*(
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*pdf(2,x1,mu2)/(1-x1) +as(mu2)/pi*pdf(2,xi1,mu2)/xi1 *2.0/3.0*(1-z1)
+                                                                            +as(mu2)/pi* pdf(0,xi1,mu2)/xi1 *1.0/2.0*(1-z1)*z1  ) *
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*ffd(fh,ch,x2,mu2)/(1-x2)
+                                                     +as(mu2)/pi*ffd(fh,ch,xi2,mu2)/xi2*(2.0/3.0*(1-z2)+4.0/3.0*(1+z2*z2)/(1-z2)*log(z2))
+                                                     +as(mu2)/pi*ffg(fh,ch,xi2,mu2)/xi2 *(2.0/3.0*z2 +4.0/3.0*(1+(1-z2)*(1-z2))/z2*log(z2)   )  ) + 
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*pdf(-2,x1,mu2)/(1-x1)
+                                                                            +as(mu2)/pi* pdf(-2,xi1,mu2)/xi1 *2.0/3.0*(1-z1)
+                                                                            +as(mu2)/pi* pdf(0,xi1,mu2)/xi1 *1.0/2.0*(1-z1)*z1  ) *
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*ffdb(fh,ch,x2,mu2)/(1-x2)
+                                                     +as(mu2)/pi*ffdb(fh,ch,xi2,mu2)/xi2*(2.0/3.0*(1-z2)+4.0/3.0*(1+z2*z2)/(1-z2)*log(z2))
+                                                     +as(mu2)/pi*ffg(fh,ch,xi2,mu2)/xi2 *(2.0/3.0*z2 +4.0/3.0*(1+(1-z2)*(1-z2))/z2*log(z2)   )  ) );
+double pdfdf2=(1-x1)*(1-x2)*edq2*(
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*pdf(1,x1,mu2)/(1-x1) +as(mu2)/pi*pdf(1,xi1,mu2)/xi1 *2.0/3.0*(1-z1)
+                                                                            +as(mu2)/pi* pdf(0,xi1,mu2)/xi1 *1.0/2.0*(1-z1)*z1  ) *
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*ffd(fh,ch,x2,mu2)/(1-x2)
+                                                     +as(mu2)/pi*ffd(fh,ch,xi2,mu2)/xi2*(2.0/3.0*(1-z2)+4.0/3.0*(1+z2*z2)/(1-z2)*log(z2))
+                                                     +as(mu2)/pi*ffg(fh,ch,xi2,mu2)/xi2 *(2.0/3.0*z2 +4.0/3.0*(1+(1-z2)*(1-z2))/z2*log(z2)   )  ) + 
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*pdf(-1,x1,mu2)/(1-x1)
+                                                                            +as(mu2)/pi* pdf(-1,xi1,mu2)/xi1 *2.0/3.0*(1-z1)
+                                                                            +as(mu2)/pi* pdf(0,xi1,mu2)/xi1 *1.0/2.0*(1-z1)*z1  ) *
+			  ((1+as(mu2)/pi/3.0*(-8.0 ) )*ffdb(fh,ch,x2,mu2)/(1-x2)
+                                                     +as(mu2)/pi*ffdb(fh,ch,xi2,mu2)/xi2*(2.0/3.0*(1-z2)+4.0/3.0*(1+z2*z2)/(1-z2)*log(z2))
+                                                     +as(mu2)/pi*ffg(fh,ch,xi2,mu2)/xi2 *(2.0/3.0*z2 +4.0/3.0*(1+(1-z2)*(1-z2))/z2*log(z2)   )  ) );
+
+
+
+ return pdfuf1+pdfdf1+pdfuf2+pdfdf2;
+
+}
+
+
 double ker1_fun_unpo_N(double b,double Q2, double pt, double z ,double x , double xi1a, double zi2a ,int cn   )
  { 
 
@@ -664,6 +793,28 @@ double ker1_fun_unpo_N(double b,double Q2, double pt, double z ,double x , doubl
  return crsunpo ;
 } 
 
+double ker1_fun_unpo_P(double b,double Q2, double pt, double z ,double x , double xi1a, double zi2a ,int cn   )
+ { 
+
+    double funpo=unpopdf_dis_P( x, z ,  xi1a, zi2a , b ,1  ,  cn   );
+
+ 
+ double crsunpo=Singma0(Q2,Sit,x)*(funpo)*(2*pi*pt/z)*(b/(2.0*pi))*(TMath::BesselJ0(pt*b))*
+   Sudakov1(Q2,b)*Sudakov2(Q2,b)*Sudakov3unpoDIS(b,x,z);
+ return crsunpo ;
+} 
+
+
+double ker1_fun_unpo_D(double b,double Q2, double pt, double z ,double x , double xi1a, double zi2a ,int cn   )
+ { 
+
+   double funpo=unpopdf_dis_D( x, z ,  xi1a, zi2a , b ,1  ,  cn   );
+
+ 
+ double crsunpo=Singma0(Q2,Sit,x)*(funpo)*(2*pi*pt/z)*(b/(2.0*pi))*(TMath::BesselJ0(pt*b))*
+   Sudakov1(Q2,b)*Sudakov2(Q2,b)*Sudakov3unpoDIS(b,x,z);
+ return crsunpo ;
+} 
 
 
 double ker2_fun_unpo_pip_xz_N(const double * xi)
@@ -674,6 +825,27 @@ double ker2_fun_unpo_pip_xz_N(const double * xi)
 double ker2_fun_unpo_pim_xz_N(const double * xi)
 {
   return ker1_fun_unpo_N(xi[0],Q2it,phtit/zit,zit,xit, xi[1],xi[2],-1  );
+}
+
+
+double ker2_fun_unpo_pip_xz_P(const double * xi)
+{
+  return ker1_fun_unpo_P(xi[0],Q2it,phtit/zit,zit,xit, xi[1],xi[2],1  );
+}
+
+double ker2_fun_unpo_pim_xz_P(const double * xi)
+{
+  return ker1_fun_unpo_P(xi[0],Q2it,phtit/zit,zit,xit, xi[1],xi[2],-1  );
+}
+
+double ker2_fun_unpo_pip_xz_D(const double * xi)
+{
+  return ker1_fun_unpo_D(xi[0],Q2it,phtit/zit,zit,xit, xi[1],xi[2],1  );
+}
+
+double ker2_fun_unpo_pim_xz_D(const double * xi)
+{
+  return ker1_fun_unpo_D(xi[0],Q2it,phtit/zit,zit,xit, xi[1],xi[2],-1  );
 }
 
 
@@ -708,7 +880,7 @@ igunpo.SetFunction(wfunpo);
 
 double valunpo1 = igunpo.Integral(a,b);
 
-UNPOLARISED_PIP[i]=valunpo1;
+UNPOLARISED[i]=valunpo1;
 
  
 
@@ -747,7 +919,87 @@ igunpo.SetFunction(wfunpo);
 
 double valunpo1 = igunpo.Integral(a,b);
 
-UNPOLARISED_PIM[i]=valunpo1;
+UNPOLARISED[i]=valunpo1;
+
+ 
+
+}  
+
+}
+
+
+
+
+void UNPOLARISED_P_PIP ( int numi   ,  double zi[] ,double xi[] ,double Q2i[] , double phti[]  ) 
+{ 
+ 
+
+
+ Sit=S_Jlab12;
+
+ double a[3] =  {b_l   ,0  ,0 };
+
+ double b[3] =  {b_u   ,1  ,1 };
+
+
+
+
+
+ 
+ for(int i=0 ; i<numi ; ++i )
+{ 
+
+          zit=zi[i];
+        xit=xi[i];
+       Q2it=Q2i[i];
+       phtit=phti[i];
+
+ROOT::Math::Functor wfunpo(&ker2_fun_unpo_pip_xz_P,3); 
+ROOT::Math::IntegratorMultiDim igunpo(ROOT::Math::IntegrationMultiDim::kADAPTIVE);
+igunpo.SetFunction(wfunpo);
+
+double valunpo1 = igunpo.Integral(a,b);
+
+UNPOLARISED[i]=valunpo1;
+
+ 
+
+}  
+
+}
+
+
+void UNPOLARISED_P_PIM ( int numi   ,  double zi[] ,double xi[] ,double Q2i[] , double phti[]  ) 
+{ 
+ 
+
+
+ Sit=S_Jlab12;
+
+ double a[3] =  {b_l   ,0  ,0 };
+
+ double b[3] =  {b_u   ,1  ,1 };
+
+
+
+
+
+ 
+ for(int i=0 ; i<numi ; ++i )
+{ 
+
+          zit=zi[i];
+        xit=xi[i];
+       Q2it=Q2i[i];
+       phtit=phti[i];
+
+ROOT::Math::Functor wfunpo(&ker2_fun_unpo_pim_xz_P,3); 
+ROOT::Math::IntegratorMultiDim igunpo(ROOT::Math::IntegrationMultiDim::kADAPTIVE);
+igunpo.SetFunction(wfunpo);
+
+double valunpo1 = igunpo.Integral(a,b);
+
+UNPOLARISED[i]=valunpo1;
 
  
 
@@ -866,6 +1118,268 @@ double popdf_dis_N_pim(double x1, double  x2  ,double b  , double xi1a, double x
  // return pdfuf+pdfdf+pdfubf+pdfdbf;
 }
 
+double popdf_dis_P_pi(double x1, double  x2  ,double b , double xi1a, double xi2a     )
+{
+  double bm2=1.5;
+ 
+ double bs2= b*b/(1+b*b/(bm2*bm2) )/C1/C1;
+
+
+
+ double mu2=1.0/bs2;
+
+ double xi1=(1-x1)*xi1a+x1;
+ double xi2=(1-x2)*xi2a+x2;
+
+ double z1=x1/xi1;
+ double z2=x2/xi2;
+
+ double pdfuf=(1-x1)*(1-x2)*euq2*(
+				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_u(x1,mu2)/(1-x1)   ) *
+				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_u_pi(x2,mu2)/(1-x2) 
+				                     +as(mu2)/pi*pof_u_pi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+		                                      )                          
+                                                                                           ) ;
+
+ // double pdfubf=(1-x1)*(1-x2)*euq2*(
+ // 				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_ub(x1,mu2)/(1-x1)   ) *
+ // 				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_ub_pi(x2,mu2)/(1-x2) 
+ // 				                     +as(mu2)/pi*pof_ub_pi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+ // 		                                      )
+ //                                                                                          ) ;
+
+
+
+  double pdfdf=(1-x1)*(1-x2)*edq2*(
+				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_d(x1,mu2)/(1-x1)   ) *
+				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_d_pi(x2,mu2)/(1-x2) 
+                                                     +as(mu2)/pi*pof_d_pi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+		                                      )
+                                                                                           ) ;
+
+ // double pdfdbf=(1-x1)*(1-x2)*edq2*(
+ // 				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_db(x1,mu2)/(1-x1)   ) *
+ // 				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_db_pi(x2,mu2)/(1-x2) 
+ //                                                     +as(mu2)/pi*pof_db_pi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+ // 		                                      )
+ //                                                                                           ) ;
+
+  return pdfuf+pdfdf;
+  //  return pdfuf+pdfdf+pdfubf+pdfdbf;
+}
+
+
+
+double popdf_dis_P_pim(double x1, double  x2  ,double b  , double xi1a, double xi2a   )
+{
+  double bm2=1.5;
+ 
+ double bs2= b*b/(1+b*b/(bm2*bm2) )/C1/C1;
+
+
+
+ double mu2=1.0/bs2;
+
+ double xi1=(1-x1)*xi1a+x1;
+ double xi2=(1-x2)*xi2a+x2;
+
+ double z1=x1/xi1;
+ double z2=x2/xi2;
+
+ double pdfuf=(1-x1)*(1-x2)*euq2*(
+				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_u(x1,mu2)/(1-x1)   ) *
+				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_u_mpi(x2,mu2)/(1-x2) 
+				                     +as(mu2)/pi*pof_u_mpi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+		                                      )                          
+                                                                                           ) ;
+
+ // double pdfubf=(1-x1)*(1-x2)*euq2*(
+ // 				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_ub(x1,mu2)/(1-x1)   ) *
+ // 				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_ub_mpi(x2,mu2)/(1-x2) 
+ // 				                     +as(mu2)/pi*pof_ub_mpi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+ // 		                                      )
+ //                                                                                           ) ;
+
+
+
+  double pdfdf=(1-x1)*(1-x2)*edq2*(
+				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_d(x1,mu2)/(1-x1)   ) *
+				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_d_mpi(x2,mu2)/(1-x2) 
+                                                     +as(mu2)/pi*pof_d_mpi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+		                                      )
+                                                                                           ) ;
+
+ // double pdfdbf=(1-x1)*(1-x2)*edq2*(
+ // 				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_db(x1,mu2)/(1-x1)   ) *
+ // 				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_db_mpi(x2,mu2)/(1-x2) 
+ //                                                     +as(mu2)/pi*pof_db_mpi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+ // 		                                      )
+ //                                                                                           ) ;
+
+ return pdfuf+pdfdf;
+ // return pdfuf+pdfdf+pdfubf+pdfdbf;
+}
+
+
+double popdf_dis_D_pi(double x1, double  x2  ,double b  , double xi1a, double xi2a    )
+{
+  double bm2=1.5;
+ 
+ double bs2= b*b/(1+b*b/(bm2*bm2) )/C1/C1;
+
+
+
+ double mu2=1.0/bs2;
+
+ double xi1=(1-x1)*xi1a+x1;
+ double xi2=(1-x2)*xi2a+x2;
+
+ double z1=x1/xi1;
+ double z2=x2/xi2;
+
+ double pdfuf1=(1-x1)*(1-x2)*euq2*(
+				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_u(x1,mu2)/(1-x1)   ) *
+				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_u_pi(x2,mu2)/(1-x2) 
+				                     +as(mu2)/pi*pof_u_pi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+		                                      )                          
+                                                                                           ) ;
+
+ // double pdfubf1=(1-x1)*(1-x2)*euq2*(
+ // 				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_ub(x1,mu2)/(1-x1)   ) *
+ // 				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_ub_pi(x2,mu2)/(1-x2) 
+ // 				                     +as(mu2)/pi*pof_ub_pi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+ // 		                                      )
+ //                                                                                           ) ;
+
+double pdfuf2=(1-x1)*(1-x2)*euq2*(
+				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_d(x1,mu2)/(1-x1)   ) *
+				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_u_pi(x2,mu2)/(1-x2) 
+				                     +as(mu2)/pi*pof_u_pi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+		                                      )                          
+                                                                                           ) ;
+
+ // double pdfubf2=(1-x1)*(1-x2)*euq2*(
+ // 				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_db(x1,mu2)/(1-x1)   ) *
+ // 				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_ub_pi(x2,mu2)/(1-x2) 
+ // 				                     +as(mu2)/pi*pof_ub_pi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+ // 		                                      )
+ //                                                                                           ) ;
+
+
+
+  double pdfdf1=(1-x1)*(1-x2)*edq2*(
+				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_d(x1,mu2)/(1-x1)   ) *
+				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_d_pi(x2,mu2)/(1-x2) 
+                                                     +as(mu2)/pi*pof_d_pi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+		                                      )
+                                                                                           ) ;
+
+ // double pdfdbf1=(1-x1)*(1-x2)*edq2*(
+ // 				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_db(x1,mu2)/(1-x1)   ) *
+ // 				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_db_pi(x2,mu2)/(1-x2) 
+ //                                                     +as(mu2)/pi*pof_db_pi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+ // 		                                      )
+ //                                                                                           ) ;
+
+  double pdfdf2=(1-x1)*(1-x2)*edq2*(
+				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_u(x1,mu2)/(1-x1)   ) *
+				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_d_pi(x2,mu2)/(1-x2) 
+                                                     +as(mu2)/pi*pof_d_pi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+		                                      )
+                                                                                           ) ;
+
+ // double pdfdbf2=(1-x1)*(1-x2)*edq2*(
+ // 				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_ub(x1,mu2)/(1-x1)   ) *
+ // 				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_db_pi(x2,mu2)/(1-x2) 
+ //                                                     +as(mu2)/pi*pof_db_pi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+ // 		                                      )
+ //                                                                                           ) ;
+
+
+ return pdfuf1+pdfdf1+pdfuf2+pdfdf2;
+ // return pdfuf1+pdfdf1+pdfubf1+pdfdbf1+pdfuf2+pdfdf2+pdfubf2+pdfdbf2;
+}
+
+
+
+double popdf_dis_D_pim(double x1, double  x2  ,double b  , double xi1a, double xi2a    )
+{
+  double bm2=1.5;
+ 
+ double bs2= b*b/(1+b*b/(bm2*bm2) )/C1/C1;
+
+
+
+ double mu2=1.0/bs2;
+
+ double xi1=(1-x1)*xi1a+x1;
+ double xi2=(1-x2)*xi2a+x2;
+
+ double z1=x1/xi1;
+ double z2=x2/xi2;
+
+ double pdfuf1=(1-x1)*(1-x2)*euq2*(
+				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_u(x1,mu2)/(1-x1)   ) *
+				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_u_mpi(x2,mu2)/(1-x2) 
+				                     +as(mu2)/pi*pof_u_mpi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+		                                      )                          
+                                                                                           ) ;
+
+ // double pdfubf1=(1-x1)*(1-x2)*euq2*(
+ // 				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_ub(x1,mu2)/(1-x1)   ) *
+ // 				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_ub_mpi(x2,mu2)/(1-x2) 
+ // 				                     +as(mu2)/pi*pof_ub_mpi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+ // 		                                      )
+ //                                                                                           ) ;
+
+double pdfuf2=(1-x1)*(1-x2)*euq2*(
+				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_d(x1,mu2)/(1-x1)   ) *
+				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_u_mpi(x2,mu2)/(1-x2) 
+				                     +as(mu2)/pi*pof_u_mpi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+		                                      )                          
+                                                                                           ) ;
+
+ // double pdfubf2=(1-x1)*(1-x2)*euq2*(
+ // 				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_db(x1,mu2)/(1-x1)   ) *
+ // 				     ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_ub_mpi(x2,mu2)/(1-x2) 
+ // 				                     +as(mu2)/pi*pof_ub_mpi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+ // 		                                      )
+ //                                                                                           ) ;
+
+
+
+  double pdfdf1=(1-x1)*(1-x2)*edq2*(
+				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_d(x1,mu2)/(1-x1)   ) *
+				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_d_mpi(x2,mu2)/(1-x2) 
+                                                     +as(mu2)/pi*pof_d_mpi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+		                                      )
+                                                                                           ) ;
+
+ // double pdfdbf1=(1-x1)*(1-x2)*edq2*(
+ // 				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_db(x1,mu2)/(1-x1)   ) *
+ // 				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_db_mpi(x2,mu2)/(1-x2) 
+ //                                                     +as(mu2)/pi*pof_db_mpi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+ // 		                                      )
+ //                                                                                           ) ;
+
+  double pdfdf2=(1-x1)*(1-x2)*edq2*(
+				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_u(x1,mu2)/(1-x1)   ) *
+				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_d_mpi(x2,mu2)/(1-x2) 
+                                                     +as(mu2)/pi*pof_d_mpi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+		                                      )
+                                                                                           ) ;
+
+ // double pdfdbf2=(1-x1)*(1-x2)*edq2*(
+ // 				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pop_ub(x1,mu2)/(1-x1)   ) *
+ // 				      ((1+as(mu2)/pi/3.0*(-8.0 ) )*pof_db_mpi(x2,mu2)/(1-x2) 
+ //                                                     +as(mu2)/pi*pof_db_mpi(xi2,mu2)/(xi2)*(4.0/3.0*(2.0*z2)/(1-z2)*log(z2))
+ // 		                                      )
+ //                                                                                           ) ;
+
+
+   return pdfuf1+pdfdf1+pdfuf2+pdfdf2;
+ // return pdfuf1+pdfdf1+pdfubf1+pdfdbf1+pdfuf2+pdfdf2+pdfubf2+pdfdbf2;
+}
 
 
 
@@ -892,6 +1406,53 @@ double ker1_fun_po_N_pim(double b,double Q2, double pt, double z ,double x   ,  
 } 
 
 
+double ker1_fun_po_D_pip(double b,double Q2, double pt, double z ,double x   ,  double BNLY , double xi1a, double xi2a )
+ { 
+
+   double funpo=popdf_dis_D_pi( x, z  , b ,  xi1a,  xi2a  );
+
+ 
+ double crsunpo=Singma0_collins(Q2,Sit,x)*(funpo)*(2*pi*pt/z)*(b/(2.0*z))*(b/(2.0*pi))*(TMath::BesselJ1(pt*b))*
+   Sudakov1(Q2,b)*Sudakov2(Q2,b)*Sudakov3poDIS(BNLY,b,x,z);
+ return crsunpo ;
+} 
+
+double ker1_fun_po_D_pim(double b,double Q2, double pt, double z ,double x   ,  double BNLY , double xi1a, double xi2a )
+ { 
+
+   double funpo=popdf_dis_D_pim( x, z  , b ,  xi1a,  xi2a   );
+
+ 
+ double crsunpo=Singma0_collins(Q2,Sit,x)*(funpo)*(2*pi*pt/z)*(b/(2.0*z))*(b/(2.0*pi))*(TMath::BesselJ1(pt*b))*
+   Sudakov1(Q2,b)*Sudakov2(Q2,b)*Sudakov3poDIS(BNLY,b,x,z);
+ return crsunpo ;
+} 
+
+
+
+double ker1_fun_po_P_pip(double b,double Q2, double pt, double z ,double x  ,  double BNLY , double xi1a, double xi2a  )
+ { 
+
+   double funpo=popdf_dis_P_pi( x, z  , b ,  xi1a,  xi2a  );
+
+ 
+ double crsunpo=Singma0_collins(Q2,Sit,x)*(funpo)*(2*pi*pt/z)*(b/(2.0*z))*(b/(2.0*pi))*(TMath::BesselJ1(pt*b))*
+   Sudakov1(Q2,b)*Sudakov2(Q2,b)*Sudakov3poDIS(BNLY,b,x,z);
+ return crsunpo ;
+} 
+
+double ker1_fun_po_P_pim(double b,double Q2, double pt, double z ,double x   ,  double BNLY , double xi1a, double xi2a  )
+ { 
+
+   double funpo=popdf_dis_P_pim( x, z  , b,  xi1a,  xi2a   );
+
+ 
+ double crsunpo=Singma0_collins(Q2,Sit,x)*(funpo)*(2*pi*pt/z)*(b/(2.0*z))*(b/(2.0*pi))*(TMath::BesselJ1(pt*b))*
+   Sudakov1(Q2,b)*Sudakov2(Q2,b)*Sudakov3poDIS(BNLY,b,x,z);
+ return crsunpo ;
+} 
+
+
 
 double ker2_fun_po_pip_xz_N(const double * xi)
 {
@@ -903,6 +1464,27 @@ double ker2_fun_po_pim_xz_N(const double * xi)
   return ker1_fun_po_N_pim(xi[0],Q2it,phtit/zit,zit,xit  , BNLYit ,xi[1] ,xi[2]  );
 }
 
+double ker2_fun_po_pip_xz_P(const double * xi)
+{
+  return ker1_fun_po_P_pip(xi[0],Q2it,phtit/zit,zit,xit , BNLYit ,xi[1] ,xi[2]   );
+}
+
+double ker2_fun_po_pim_xz_P(const double * xi)
+{
+  return ker1_fun_po_P_pim(xi[0],Q2it,phtit/zit,zit,xit  , BNLYit ,xi[1] ,xi[2]  );
+}
+
+
+
+double ker2_fun_po_pip_xz_D(const double * xi)
+{
+  return ker1_fun_po_D_pip(xi[0],Q2it,phtit/zit,zit,xit  , BNLYit ,xi[1] ,xi[2]  );
+}
+
+double ker2_fun_po_pim_xz_D(const double * xi)
+{
+  return ker1_fun_po_D_pim(xi[0],Q2it,phtit/zit,zit,xit  , BNLYit ,xi[1] ,xi[2]  );
+}
 
 
 
@@ -936,7 +1518,7 @@ igunpo.SetFunction(wfunpo);
 
 double valunpo1 = igunpo.Integral(a,b);
 
-POLARISED_PIP[i]=valunpo1;
+POLARISED[i]=valunpo1;
 
 
 
@@ -975,13 +1557,88 @@ igunpo.SetFunction(wfunpo);
 
 double valunpo1 = igunpo.Integral(a,b);
 
-POLARISED_PIM[i]=valunpo1;
+POLARISED[i]=valunpo1;
 
 
 }  
 
 }
 
+void POLARISED_P_PIP ( int numi   ,  double zi[] ,double xi[] ,double Q2i[] , double phti[]  ) 
+{ 
+ 
+
+
+ Sit=S_Jlab12;
+
+ double a[3] =  {b_l   ,0  ,0 };
+
+ double b[3] =  {b_u   ,1  ,1 };
+
+
+
+
+
+ 
+ for(int i=0 ; i<numi ; ++i )
+{ 
+
+        zit=zi[i];
+        xit=xi[i];
+       Q2it=Q2i[i];
+      phtit=phti[i];
+
+ROOT::Math::Functor wfunpo(&ker2_fun_po_pip_xz_P,3); 
+ROOT::Math::IntegratorMultiDim igunpo(ROOT::Math::IntegrationMultiDim::kADAPTIVE);
+igunpo.SetFunction(wfunpo);
+
+double valunpo1 = igunpo.Integral(a,b);
+
+POLARISED[i]=valunpo1;
+
+
+
+}  
+
+}
+
+
+void POLARISED_P_PIM ( int numi   ,  double zi[] ,double xi[] ,double Q2i[] , double phti[]  ) 
+{ 
+ 
+
+
+ Sit=S_Jlab12;
+
+ double a[3] =  {b_l   ,0  ,0 };
+
+ double b[3] =  {b_u   ,1  ,1 };
+
+
+
+
+
+ 
+ for(int i=0 ; i<numi ; ++i )
+{ 
+
+        zit=zi[i];
+        xit=xi[i];
+       Q2it=Q2i[i];
+      phtit=phti[i];
+
+ROOT::Math::Functor wfunpo(&ker2_fun_po_pim_xz_P,3); 
+ROOT::Math::IntegratorMultiDim igunpo(ROOT::Math::IntegrationMultiDim::kADAPTIVE);
+igunpo.SetFunction(wfunpo);
+
+double valunpo1 = igunpo.Integral(a,b);
+
+POLARISED[i]=valunpo1;
+
+
+}  
+
+}
 
 
 
@@ -1080,12 +1737,22 @@ double tensorcharge_down( double x_min, double x_max){
 
 double Q2val[5000],xval[5000],zval[5000],ptval[5000],yval[5000],Astat[5000],N[5000],coverage[5000],coef[3][5000];
 
-bool VERBOSE = false; // print everything or not
+bool VERBOSE = true; // print everything or not
 
 
 
-// Reading data from Zhihong, returns total number of bins
-int read_data(int target_flag=3, int particle_flag=1, int flag_t=0){
+
+
+
+
+// Reading SOLID data
+// TString directory -> directory path 
+// int Q2_flag_bin -> number of Q2 bins
+// int z_flag_bin-> number of z bins
+// int target_flag -> target
+// int particle_flag -> particle 
+// int flag_t -> 1->Colllins, 2->Sivers,3->Pretzelosity
+int read_data_solid(char const * directory = "", int Q2_flag_bin = 4, int z_flag_bin = 4, int target_flag=3, int particle_flag=1, int flag_t=0){
 	//target_flag = 1->"p", 2->"d2" or 3->"3he"
 	//particle_flag = 1->pip,2->pim
 	//Q2_flag = 1 ~ 4
@@ -1114,10 +1781,10 @@ int read_data(int target_flag=3, int particle_flag=1, int flag_t=0){
 	
 	int ncount=0;
 	
-	for(int Q2_flag = 1; Q2_flag <=4; Q2_flag++){
-	for(int z_flag = 1; z_flag <=4; z_flag++){
+	for(int Q2_flag = 1; Q2_flag <=Q2_flag_bin; Q2_flag++){
+	for(int z_flag = 1; z_flag <=z_flag_bin; z_flag++){
 	
-	filename.Form("../data/results_wider2/%s_%s_%d_%d.dat",target.Data(),particle.Data(),z_flag,Q2_flag);
+	filename.Form("%s%s_%s_%d_%d.dat",directory,target.Data(),particle.Data(),Q2_flag,z_flag);
 	ifstream infile(filename);
 	
 	
@@ -1167,10 +1834,12 @@ int read_data(int target_flag=3, int particle_flag=1, int flag_t=0){
 bool GENERATE_DATA = false; // generate pseudodata 
 bool GENERATE_UNPOL = false; // generate unpolarised cross sections for later use
 
+
+
 //========================================================= main
 int main(int argc, char **argv)
 {
-   const int long_list = 2000; // number of parameter sets generated
+   const int long_list = 30000; // number of parameter sets generated
    int set_used = 0; // best fit
      
    double par_space[long_list][13]; // each line consists of 14 parameters
@@ -1179,50 +1848,92 @@ int main(int argc, char **argv)
    double x_max_jlab = 0.; 
 
 
-   ifstream outfile_p ("error_estimate/new_parameters.dat" ); // this is the file 
+// READ THE GENERATED PARAMETER SETS BEGIN 
+   ifstream infile_par ("error_estimate/new_parameters.dat" ); // this is the file with generated parameters
 
-   if(outfile_p.is_open()){
-
-
-   for(int j=0; j < long_list ;++j ){   	 
-     outfile_p >>par_space[j][0]>>par_space[j][1]>>par_space[j][2]>>par_space[j][3]>>par_space[j][4]
+   if(infile_par.is_open()){
+    for(int j=0; j < long_list ;++j ){   	 
+     infile_par >>par_space[j][0]>>par_space[j][1]>>par_space[j][2]>>par_space[j][3]>>par_space[j][4]
      >>par_space[j][5]>>par_space[j][6]>>par_space[j][7]>>par_space[j][8]>>par_space[j][9]
      >>par_space[j][10]>>par_space[j][11]>>par_space[j][12];
-   	     }
+   	}
    }
    else {
     cout << "Unable to open file "; 
     return 1;
-   }
-   
-   outfile_p.close();
+   }   
+   infile_par.close();
 
 // print parameters (optional)
   if(VERBOSE){
   for(int j=0; j < long_list ;++j ){  
    cout << j << " " ;
    for(int i=0; i <13 ;++i ){ 
-
       cout<< par_space[j][i] << " ";
-
     }
     cout << endl;
   }
   cout << " End parameter file "<< endl;
   } 
+// READ THE GENERATED PARAMETER SETS END
+  
+  
+// SETTINGS FOR THE PROGRAM BEGIN  
+  TString EXPERIMENT   = "solid"; 
+  TString TARGET       = "3he"; 
+  TString PARTICLE     = "pip"; 
+  int target_flag = 1; // 1->p, 2->d2, 3->3he
+  int particle_flag = 1; //1->pip, 2->pim
 
-  // FIRST argument : DATA or NO
+  // FIRST argument : EXPERIMENT
+  if(strcmp(argv[1],"-SOLID")== 0)
+    {
+      EXPERIMENT = "solid";
+    } else {
+      cerr << "Experiment " << argv[1] << " is not implemented";
+      return 1;
+    }
+  
+  // SECOND argument : TARGET
+  if(strcmp(argv[2],"-NEUTRON")== 0)
+    {
+      TARGET = "3he";
+      target_flag = 3;
+    } else if(strcmp(argv[2],"-PROTON")== 0)
+    {
+      TARGET = "p";
+      target_flag = 1;
+    } else {
+      cerr << "Target " << argv[2] << " is not implemented";
+      return 1;
+    }
+  
+  // THIRD argument : PRODUCED PARTICLE
+  if(strcmp(argv[3],"-PI+")== 0)
+    {
+      PARTICLE = "pip";
+      particle_flag = 1;
+    } else if(strcmp(argv[3],"-PI-")== 0)
+    {
+      PARTICLE = "pim";
+      particle_flag = 2;
+    } else {
+      cerr << "Particle " << argv[3] << " is not implemented";
+      return 1;
+    }
+  
+ // FOURTH: DATA or NO
  // we should be able to generate pseudodata by typing collins.exe -DATA 
-  if(strcmp(argv[1],"-DATA")== 0)
+  if(strcmp(argv[4],"-DATA")== 0)
     {
       GENERATE_DATA = true;
     } else {
       GENERATE_DATA = false;
     }
  
-  // FIRST argument : UNPOLARISED or NO
+  // FOURTH argument : UNPOLARISED or NO
  // we should be able to generate pseudodata by typing collins.exe -DATA 
-  if(strcmp(argv[1],"-UNPOL")== 0)
+  if(strcmp(argv[4],"-UNPOL")== 0)
     {
       GENERATE_UNPOL = true;
     } else {
@@ -1231,90 +1942,85 @@ int main(int argc, char **argv)
  
  
     
-// Second argument: which set to use
-   set_used = strtol(argv[2],NULL,0); // argv[2] should go 1, 2, ..., longlist if 0 then best fit is used
+// FITH argument: which set to use
+   set_used = strtol(argv[5],NULL,0); // argv[2] should go 1, 2, ..., longlist if 0 then best fit is used
+// SETTINGS FOR THE PROGRAM END 
+
+
+
    
    if(VERBOSE) cout << "Set number " << set_used << " will be used for computation." << endl; 
-   
+
+
+
+// READ EXPERIMENTAL DATA FIRST
+	int flag_t = 1; //1->Colllins, 2->Sivers,3->Pretzelosity
+	
+	int Q2_flag_bin = 4;
+	int z_flag_bin = 4;
+	
+	//char const * directory = "../data/results_wider2/";
+	char const * data_directory = "../data/solid_proton_results/";
+
+	if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("3he") ){
+	   data_directory = "../data/results_wider2/";
+	   Q2_flag_bin = 4;
+	   z_flag_bin = 4;
+	}   
+	if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("p") ){
+	   data_directory = "../data/solid_proton_results/";
+	   Q2_flag_bin = 8;
+	   z_flag_bin = 6;	  
+	}   
+	
+	
+	int number_bins = read_data_solid(data_directory, Q2_flag_bin, z_flag_bin, target_flag, particle_flag, flag_t);
+	
+	
+ 	
+	if(VERBOSE) cout << "Total number of " << PARTICLE << " data points on target " << TARGET << " is " << number_bins << endl;
+
+
    
 ////////////////////////////////////////////////
 ////////////////////////////////////////////////
 ////////////  CALCULATE UNPOLARISED CROSS SECTIONS IN ALL BINS  
 ////////////////////////////////////////////////
 ////////////////////////////////////////////////   
-    if(!GENERATE_DATA && GENERATE_UNPOL){
+    if(GENERATE_UNPOL){
   
   
-    if(VERBOSE) cout << "UNpolarised cross sections will be calculated." << endl; 
+    if(VERBOSE) cout << "Unpolarised cross sections will be calculated." << endl; 
  
-    // READ DATA FROM ZHIHONG
-	int target_flag = 3; // 1->p, 2->d2, 3->3he
-	int particle_flag = 1; //1->pip, 2->pim
-
-	int flag_t = 1; //1->Colllins, 2->Sivers,3->Pretzelosity
-	
-	int number_pip_bins = read_data(target_flag, particle_flag, flag_t); // READ SOLID DATA
-	
-	if(VERBOSE) cout << "Total number of pi+ data points is " << number_pip_bins << endl;
 
 
-
-   //number_pip_bins= 3;
-   //CALCULATE UNPOLARISED CROSS-SECTION IN EACH BIN
-   UNPOLARISED_N_PIP ( number_pip_bins,  zval, xval, Q2val, ptval);
-
-
-
-   //WRITE ALL UNPOLARISED CROSS SECTIONS IN A DATA FILE
-
-   TString filename="solid_unpolarised_3he_pip.dat"; 
-    
- 
-   ofstream outfile(filename);
-	
-   // format of the pseudo-data
-   // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section
-	
-  for( int i = 0; i < number_pip_bins; i++){
-	
-   outfile << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIP[i] << endl;
-	
-	
-   }
-    
-   outfile.close();
-    
-
-   particle_flag = 2; //1->pip, 2->pim
-
-   int number_pim_bins = read_data(target_flag, particle_flag, flag_t); // READ SOLID DATA
-	
-   if(VERBOSE) cout << "Total number of pi- data points is " << number_pim_bins << endl;
 
     
-    //number_pim_bins= 3;
-   //CALCULATE UNPOLARISED CROSS-SECTION IN EACH BIN
-   UNPOLARISED_N_PIM ( number_pim_bins,  zval, xval, Q2val, ptval);
+    //CALCULATE UNPOLARISED CROSS-SECTION IN EACH BIN
+    if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("3he") && PARTICLE.EqualTo("pip") )
+       UNPOLARISED_N_PIP ( number_bins,  zval, xval, Q2val, ptval);
+    if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("3he") && PARTICLE.EqualTo("pim") )
+       UNPOLARISED_N_PIM ( number_bins,  zval, xval, Q2val, ptval);
+    if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("p") && PARTICLE.EqualTo("pip") )
+       UNPOLARISED_P_PIP ( number_bins,  zval, xval, Q2val, ptval);
+    if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("p") && PARTICLE.EqualTo("pim") )
+       UNPOLARISED_P_PIM ( number_bins,  zval, xval, Q2val, ptval);
 
 
 
-   //WRITE ALL DATA IN A DATA FILE
-   filename ="solid_unpolarised_3he_pim.dat";
- 
-   ofstream outfile1(filename);
-	
-   // format of the pseudo-data
-   // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section
-	
-  for( int i = 0; i < number_pim_bins; i++){
-	
-   outfile1 << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIM[i] << endl;
-	
-	
-   }
+    //WRITE ALL UNPOLARISED CROSS SECTIONS IN A DATA FILE
+
+    TString filename; 
     
-   outfile1.close();
-
+    filename.Form("%s_unpolarised_%s_%s.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data());
+    ofstream outfile(filename);
+	
+    // format of the pseudo-data
+    // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section	
+    for( int i = 0; i < number_bins; i++){	
+     outfile << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED[i] << endl;	
+    }    
+    outfile.close(); 
     }
  
    
@@ -1324,20 +2030,19 @@ int main(int argc, char **argv)
 ////////////  CALCULATE VALUES IN ALL BINS USING PSEUDO PARAMETERS
 ////////////////////////////////////////////////
 ////////////////////////////////////////////////   
-    if(GENERATE_DATA && !GENERATE_UNPOL){
+    if(GENERATE_DATA){
   
   
-    if(VERBOSE) cout << "Pseudo data will be generated." << endl; 
+    if(VERBOSE) cout << "Calculations with parameter sets." << endl; 
     
+       
     
-    
-    
-    // read UNPOLARISED cross sections first  PI+
-    TString filename = "solid_unpolarised_3he_pip.dat";
+    // read UNPOLARISED cross sections BEGIN
+    TString filename;
+    filename.Form("%s_unpolarised_%s_%s.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data());
  
- 
-    ifstream infile(filename);
-    
+    // What is the nuber of lines:
+    ifstream infile(filename);   
     // count number of lines first
     int nlines = 0;
     
@@ -1348,16 +2053,15 @@ int main(int argc, char **argv)
    
    infile.open(filename,std::ifstream::in);
    // count number of lines first
-   int number_pip_bins = nlines ;
+   int number_bins1 = nlines ;  
+   if(VERBOSE) cout << " Number of lines in  " <<  filename << " is = " << number_bins << endl;
     
-   if(VERBOSE) cout << " Number of lines in  " <<  filename << " is = " << number_pip_bins << endl;
-    
-
+   // Read Unpolarised Cross sections
    // format of the pseudo-data
    // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section 	
-   for( int i = 0; i < number_pip_bins; i++){
+   for( int i = 0; i < number_bins1; i++){
 	int nbin =0;
-    infile >> nbin >> zval[i] >> xval[i] >> Q2val[i] >> ptval[i] >> UNPOLARISED_PIP[i];
+    infile >> nbin >> zval[i] >> xval[i] >> Q2val[i] >> ptval[i] >> UNPOLARISED[i];
     
     if (x_min_jlab >= xval[i]) x_min_jlab = xval[i]; //min value at JLAB
     if (x_max_jlab <= xval[i]) x_max_jlab = xval[i]; //max value at JLAB
@@ -1365,54 +2069,12 @@ int main(int argc, char **argv)
 	
    }    
    infile.close();
+    // read UNPOLARISED cross sections END
    
-   
-   
-   // PI- data now:
-  filename = "solid_unpolarised_3he_pim.dat";
- 
-  infile.open(filename,std::ifstream::in);
-    
-    // count number of lines first
-    nlines = 0;
-    
-    for (string s; getline(infile,s); ) {
-        ++nlines;
+
+    if( number_bins != number_bins1) {
+    cerr << " Number of bins generated for unpolarised data " << number_bins1 << " is different from number of experimental bins " << number_bins << endl;
     }
-   infile.close();
-   
-   infile.open(filename,std::ifstream::in);
-   // count number of lines first
-   int number_pim_bins = nlines ;
-    
-   if(VERBOSE) cout << " Number of lines in  " <<  filename << " is = " << number_pip_bins << endl;
-    
-
-   // format of the pseudo-data
-   // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section 	
-   for( int i = 0; i < number_pim_bins; i++){
-	int nbin =0;
-    infile >> nbin >> zval[i] >> xval[i] >> Q2val[i] >> ptval[i] >> UNPOLARISED_PIM[i];
-    
-    if (x_min_jlab >= xval[i]) x_min_jlab = xval[i]; //min value at JLAB
-    if (x_max_jlab <= xval[i]) x_max_jlab = xval[i]; //max value at JLAB
-
-	
-   }    
-   infile.close();
-    
-    
- 
-    // READ DATA FROM ZHIHONG
-	int target_flag = 3; // 1->p, 2->d2, 3->3he
-	int particle_flag = 1; //1->pip, 2->pim
-
-	int flag_t = 1; //1->Colllins, 2->Sivers,3->Pretzelosity
-	
-	int number_pip_bins1 = read_data(target_flag, particle_flag, flag_t); // READ SOLID DATA
-	
-	if(VERBOSE) cout << "Total number of pi+ data points is " << number_pip_bins << endl;
-
 
 
     // START HOPPET
@@ -1451,7 +2113,7 @@ int main(int argc, char **argv)
    double x_max_tens = 0.9999;
    
    
-   cout << "x_min_jlab = " << x_min_jlab << " x_max_jlab = " << x_max_jlab  << endl;
+   if(VERBOSE) cout << "x_min_jlab = " << x_min_jlab << " x_max_jlab = " << x_max_jlab  << endl;
    
    double tensor_up        = tensorcharge_up(x_min_tens,x_max_tens);
    double tensor_down      = tensorcharge_down(x_min_tens,x_max_tens);
@@ -1461,22 +2123,27 @@ int main(int argc, char **argv)
  
 
    //CALCULATE ASYMMETRY IN EACH BIN
-   POLARISED_N_PIP ( number_pip_bins,  zval, xval, Q2val, ptval);
-
-
-   //WRITE ALL DATA IN A DATA FILE
+   if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("3he") && PARTICLE.EqualTo("pip") )
+       POLARISED_N_PIP ( number_bins1,  zval, xval, Q2val, ptval);
+   if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("3he") && PARTICLE.EqualTo("pim") )
+       POLARISED_N_PIM ( number_bins1,  zval, xval, Q2val, ptval);
+   if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("p") && PARTICLE.EqualTo("pip") )
+       POLARISED_P_PIP ( number_bins1,  zval, xval, Q2val, ptval);
+   if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("p") && PARTICLE.EqualTo("pim") )
+       POLARISED_P_PIM ( number_bins1,  zval, xval, Q2val, ptval);
 
    
-   filename.Form("solid_data_3he_pip_%d.dat",set_used);
+
+
+   //WRITE ALL DATA IN A DATA FILE   
+   filename.Form("%s_data_%s_%s_%d.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data(),set_used);
  
-   ofstream outfile(filename);
-	
+   ofstream outfile(filename);	
    // format of the pseudo-data
    // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section
+  for( int i = 0; i < number_bins1; i++){
 	
-  for( int i = 0; i < number_pip_bins; i++){
-	
-   outfile << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIP[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i]*Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " << endl;
+   outfile << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED[i] << " " << POLARISED[i]/UNPOLARISED[i] << " " << Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " << endl;
 	
 	
    }
@@ -1484,41 +2151,6 @@ int main(int argc, char **argv)
    outfile.close();
     
 
-   particle_flag = 2; //1->pip, 2->pim
-
-   int number_pim_bins1 = read_data(target_flag, particle_flag, flag_t); // READ SOLID DATA
-	
-   if(VERBOSE) cout << "Total number of pi- data points is " << number_pim_bins << endl;
-
-    
-  
-
-   //CALCULATE ASYMMETRY IN EACH BIN
-   POLARISED_N_PIM ( number_pim_bins,  zval, xval, Q2val, ptval);
-
-
-   //WRITE ALL DATA IN A DATA FILE
-   filename.Form("solid_data_3he_pim_%d.dat",set_used);
- 
-   ofstream outfile1(filename);
-	
-   // format of the pseudo-data
-   // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section
-	
-  for( int i = 0; i < number_pip_bins; i++){
-	
-   outfile1 << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED_PIM[i] << " " << POLARISED_PIM[i]/UNPOLARISED_PIM[i] << " " << POLARISED_PIP[i]/UNPOLARISED_PIP[i]*Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " <<endl;
-	
-	
-   }
-    
-   outfile1.close();
-   
-   
-   
-	
-	
-   outfile.close();
    
    // write files with transversity at 10 GeV^2 
    double Q2 = 10;
