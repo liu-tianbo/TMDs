@@ -8,7 +8,7 @@ CPP = g++-mp-4.8
 FF = gfortran-mp-4.8
 endif
 
-PROGRAM = collins
+PROGRAM = collins_new3
 
 # Root is the same for both systems... MathMore is needed!
 ROOTCFLAGS := $(shell root-config --cflags)

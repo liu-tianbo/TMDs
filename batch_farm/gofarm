@@ -45,7 +45,8 @@ if ! [ -d batch_files ]
     rm -f batch_files/batch_${rnum}
     echo "#!/bin/sh" > batch_files/batch_${rnum}
     echo "cd "${home}"/" >>batch_files/batch_${rnum}
-	echo "./batch "$rnum" ">>batch_files/batch_${rnum}
+	echo "./batch_proton "$rnum" ">>batch_files/batch_${rnum}
+	#echo "./batch_neutron "$rnum" ">>batch_files/batch_${rnum}
 	#  
 	chmod +x batch_files/batch_${rnum}
 
