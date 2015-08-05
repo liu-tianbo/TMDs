@@ -1785,7 +1785,7 @@ int read_data_solid(char const * directory = "", int Q2_flag_bin = 4, int z_flag
 	for(int Q2_flag = 1; Q2_flag <=Q2_flag_bin; Q2_flag++){
 		for(int z_flag = 1; z_flag <=z_flag_bin; z_flag++){
 
-			filename.Form("%s/%s_%s_%d_%d.dat",directory,target.Data(),particle.Data(),Q2_flag,z_flag);
+			filename.Form("%s/%s_%s_%d_%d.dat",directory,target.Data(),particle.Data(),z_flag,Q2_flag);
 			ifstream infile(filename);
 
 
@@ -1967,16 +1967,16 @@ int main(int argc, char **argv)
 
 	if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("3he") ){
 		data_directory = "../data/solid_he3_results/";
-		Q2_flag_bin = 8;
-		z_flag_bin = 6;
+		Q2_flag_bin = 6;
+		z_flag_bin = 8;
 		//data_directory = "../data/solid_he3_results_wider2/";
 		//Q2_flag_bin = 4;
 		//z_flag_bin = 4;
 	}   
 	if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("p") ){
 		data_directory = "../data/solid_proton_results/";
-		Q2_flag_bin = 8;
-		z_flag_bin = 6;	  
+		Q2_flag_bin = 6;
+		z_flag_bin = 8;	  
 	}   
 
 
