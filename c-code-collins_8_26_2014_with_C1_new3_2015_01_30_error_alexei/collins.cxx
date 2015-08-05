@@ -1810,8 +1810,7 @@ int read_data_solid(char const * directory = "", int Q2_flag_bin = 4, int z_flag
 
 						Astat[ncount] *= coef[2-flag_t][ncount]; //coef[0]->Sivers,coef[1]->Collins, coef[2]->Pretzelosity
 
-						//Only use the data points with err<5%
-
+						//Only use the data points with err<50%
 						if (Astat[ncount]>0.&&Astat[ncount]<0.50){
 							if(VERBOSE1) cout<<Form("--- bin=%d z=%d, Q=%d pt = %f, x = %f, Astat= %f",ncount,z_flag,Q2_flag, ptval[ncount],xval[ncount], Astat[ncount])<<endl;
 							ncount ++;
