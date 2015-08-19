@@ -1740,12 +1740,6 @@ bool VERBOSE =kTRUE; // print everything or not, level-0, print only necessary
 bool VERBOSE1 =kTRUE; // print everything or not, level-1, print more
 bool VERBOSE2 =kFALSE;// print everything or not, level-2, print much more
 
-
-
-
-
-
-
 // Reading SOLID data
 // TString directory -> directory path 
 // int Q2_flag_bin -> number of Q2 bins
@@ -1810,11 +1804,12 @@ int read_data_solid(char const * directory = "", int Q2_flag_bin = 4, int z_flag
 
 						Astat[ncount] *= coef[2-flag_t][ncount]; //coef[0]->Sivers,coef[1]->Collins, coef[2]->Pretzelosity
 
-						//Only use the data points with err<50%
-						if (Astat[ncount]>0.&&Astat[ncount]<0.50){
+						//Only use the data points with err<5%
+
+						//if (Astat[ncount]>0.&&Astat[ncount]<0.50){
 							if(VERBOSE1) cout<<Form("--- bin=%d z=%d, Q=%d pt = %f, x = %f, Astat= %f",ncount,z_flag,Q2_flag, ptval[ncount],xval[ncount], Astat[ncount])<<endl;
 							ncount ++;
-						}
+						//}
 
 					}
 				}
@@ -1828,6 +1823,43 @@ int read_data_solid(char const * directory = "", int Q2_flag_bin = 4, int z_flag
 
 }
 
+// Reading CLAS data
+// TString directory -> directory path 
+// int Q2_flag_bin -> number of Q2 bins
+// int z_flag_bin-> number of z bins
+// int target_flag -> target
+// int particle_flag -> particle 
+// int flag_t -> 1->Colllins, 2->Sivers,3->Pretzelosity
+int read_data_clas(char const * directory = "", int particle_flag=1){
+	//particle_flag = 1->pip,2->pim
+
+	TString particle = "X";
+	if(particle_flag==1)
+		particle ="pip";
+	else if(particle_flag==2)
+		particle ="pim";
+	else{
+		cerr<<"I don't know this particle flag!"<<endl;
+	}
+	TString filename;
+	filename.Form("%s/projections_4D_%s_solid.out",directory,particle.Data());
+	ifstream infile(filename);
+
+	int ncount=0;
+	int bin = -1;
+	TString dum;
+	infile >> dum >> dum >> dum >> dum >> dum >> dum >> dum >> dum;
+	while(!(infile.eof())){
+		infile >> bin >> xval[ncount] >> ptval[ncount] >> zval[ncount] >> Q2val[ncount] >> yval[ncount] >> N[ncount]>> Astat[ncount];
+		if(Astat[ncount]>1.e-9){
+			if(VERBOSE1) cout<<Form("---#%5d: bin=%d z=%f, Q=%f pt = %f, x = %f, Astat= %f",ncount,bin,zval[ncount],Q2val[ncount], ptval[ncount],xval[ncount], Astat[ncount])<<endl;
+			ncount ++;
+		}
+	}
+	infile.close();
+
+	return ncount; // total number of bins
+}
 
 
 
@@ -1842,14 +1874,15 @@ int main(int argc, char **argv)
 	//const int long_list = 100000; // number of parameter sets generated
 	int set_used = 0; // best fit
 
-	double par_space[100000][13]; // each line consists of 13 parameters
+	static double par_space[300000][13]; // each line consists of 13 parameters
 
 	double x_min_jlab = 1.; // to store min and max value of x in SOLID
 	double x_max_jlab = 0.; 
 
 
 	// READ THE GENERATED PARAMETER SETS BEGIN 
-	ifstream infile_par ("error_estimate/new_parameters.dat" ); // this is the file with generated parameters
+	ifstream infile_par ("error_estimate/new_parameters_jun29.dat" ); // this is the file with generated parameters
+	//ifstream infile_par ("error_estimate/new_parameters.dat" ); // this is the file with generated parameters
 
 	int j=0;
 	if(infile_par.is_open()){
@@ -1885,14 +1918,18 @@ int main(int argc, char **argv)
 	TString EXPERIMENT   = "solid"; 
 	TString TARGET       = "3he"; 
 	TString PARTICLE     = "pip"; 
-	int target_flag = 1; // 1->p, 2->d2, 3->3he
-	int particle_flag = 1; //1->pip, 2->pim
+	int target_flag = 0; // 1->p, 2->d2, 3->3he
+	int particle_flag = 0; //1->pip, 2->pim
 
 	// FIRST argument : EXPERIMENT
 	if(strcmp(argv[1],"-SOLID")== 0)
 	{
 		EXPERIMENT = "solid";
-	} else {
+	}
+	else if(strcmp(argv[1],"-CLAS")== 0)
+	{
+		EXPERIMENT = "clas";
+	}  else {
 		cerr << "Experiment " << argv[1] << " is not implemented";
 		return 1;
 	}
@@ -1978,15 +2015,20 @@ int main(int argc, char **argv)
 		Q2_flag_bin = 6;
 		z_flag_bin = 8;	  
 	}   
+	if ( EXPERIMENT.EqualTo("clas") && TARGET.EqualTo("p") ){
+		data_directory = "../data/clas_proton_results/";
+		Q2_flag_bin = 6;
+		z_flag_bin = 8;	  
+	}   
 
-
-	int number_bins = read_data_solid(data_directory, Q2_flag_bin, z_flag_bin, target_flag, particle_flag, flag_t);
-
+	int number_bins = 0;
+	if ( EXPERIMENT.EqualTo("solid"))
+		number_bins = read_data_solid(data_directory, Q2_flag_bin, z_flag_bin, target_flag, particle_flag, flag_t);
+	if ( EXPERIMENT.EqualTo("clas"))
+		number_bins = read_data_clas(data_directory, particle_flag);
 
 
 	if(VERBOSE) cout << "Total number of " << PARTICLE << " data points on target " << TARGET << " is " << number_bins << endl;
-
-
 
 	////////////////////////////////////////////////
 	////////////////////////////////////////////////
@@ -2130,13 +2172,13 @@ int main(int argc, char **argv)
 
 
 		//CALCULATE ASYMMETRY IN EACH BIN
-		if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("3he") && PARTICLE.EqualTo("pip") )
+		if ( (EXPERIMENT.EqualTo("solid") || EXPERIMENT.EqualTo("clas") ) && TARGET.EqualTo("3he") && PARTICLE.EqualTo("pip") )
 			POLARISED_N_PIP ( number_bins1,  zval, xval, Q2val, ptval);
-		if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("3he") && PARTICLE.EqualTo("pim") )
+		if ( (EXPERIMENT.EqualTo("solid") || EXPERIMENT.EqualTo("clas") ) && TARGET.EqualTo("3he") && PARTICLE.EqualTo("pim") )
 			POLARISED_N_PIM ( number_bins1,  zval, xval, Q2val, ptval);
-		if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("p") && PARTICLE.EqualTo("pip") )
+		if ( (EXPERIMENT.EqualTo("solid") || EXPERIMENT.EqualTo("clas") ) && TARGET.EqualTo("p") && PARTICLE.EqualTo("pip") )
 			POLARISED_P_PIP ( number_bins1,  zval, xval, Q2val, ptval);
-		if ( EXPERIMENT.EqualTo("solid") && TARGET.EqualTo("p") && PARTICLE.EqualTo("pim") )
+		if ( (EXPERIMENT.EqualTo("solid") || EXPERIMENT.EqualTo("clas") ) && TARGET.EqualTo("p") && PARTICLE.EqualTo("pim") )
 			POLARISED_P_PIM ( number_bins1,  zval, xval, Q2val, ptval);
 
 
