@@ -26,15 +26,21 @@ class SAMPLER(object):
     F.close()
     L=[l.strip() for l in L]
     L=[l for l in L if l!='']
-    rho=np.array([[float(x) for x in l.split()] for l in L])
+    L=[l.split() for l in L]
+    L=[[l[i] for i in [0,1,2,3,4,7,8,9,10,11,12]] for l in L]
+    L=[L[i] for i in [0,1,2,3,4,7,8,9,10,11,12]]
+
+    rho=np.array([[float(x) for x in l] for l in L])
+    print rho.shape
+
     err=[]
     err.append(7.17002e-04) 
     err.append(2.46543e-02)
     err.append(7.15875e-03)
     err.append(7.59358e-03)
     err.append(4.01160e-02)
-    err.append(5.38257e-01)
-    err.append(7.93746e-01)
+    #err.append(5.38257e-01)
+    #err.append(7.93746e-01)
     err.append(8.65518e-02)
     err.append(1.25156e-01)
     err.append(4.33534e-02)
@@ -53,14 +59,14 @@ class SAMPLER(object):
     par['Nd_c']= {'range':None,'idx': 2,'val':-1.95220e-01,'pmin':None,'pmax':None}
     par['au_c']= {'range':None,'idx': 3,'val': 1.69586e+00,'pmin':None,'pmax':None}
     par['ad_c']= {'range':None,'idx': 4,'val': 3.20601e-01,'pmin':None,'pmax':None}
-    par['bu_c']= {'range':None,'idx': 5,'val': 1.46831e-06,'pmin':None,'pmax':None}
-    par['bd_c']= {'range':None,'idx': 6,'val': 3.61390e-03,'pmin':None,'pmax':None}
-    par['Nu_T']  = {'range':None,'idx': 7,'val': 8.54376e-01,'pmin':None,'pmax':None}
-    par['Nd_T']  = {'range':None,'idx': 8,'val':-9.99999e-01,'pmin':None,'pmax':None}
-    par['au_T']  = {'range':None,'idx': 9,'val': 6.88367e-01,'pmin':None,'pmax':None}
-    par['ad_T']  = {'range':None,'idx':10,'val': 1.79434e+00,'pmin':None,'pmax':None}
-    par['bu_T']  = {'range':None,'idx':11,'val': 4.81953e-02,'pmin':None,'pmax':None}
-    par['bd_T']  = {'range':None,'idx':12,'val': 6.99676e+00,'pmin':None,'pmax':None}
+    #par['bu_c']= {'range':None,'idx': 5,'val': 1.46831e-06,'pmin':None,'pmax':None}
+    #par['bd_c']= {'range':None,'idx': 6,'val': 3.61390e-03,'pmin':None,'pmax':None}
+    par['Nu_T']  = {'range':None,'idx': 5,'val': 8.54376e-01,'pmin':None,'pmax':None}
+    par['Nd_T']  = {'range':None,'idx': 6,'val':-9.99999e-01,'pmin':None,'pmax':None}
+    par['au_T']  = {'range':None,'idx': 7,'val': 6.88367e-01,'pmin':None,'pmax':None}
+    par['ad_T']  = {'range':None,'idx':8,'val': 1.79434e+00,'pmin':None,'pmax':None}
+    par['bu_T']  = {'range':None,'idx':9,'val': 4.81953e-02,'pmin':None,'pmax':None}
+    par['bd_T']  = {'range':None,'idx':10,'val': 6.99676e+00,'pmin':None,'pmax':None}
 
     par['BLNY'].update({'pmin': 0,'pmax':None})
     par['Nu_T'].update({'pmin':-1,'pmax':1})
@@ -73,8 +79,8 @@ class SAMPLER(object):
     par['Nd_c'].update({'pmin':-1,'pmax':1})
     par['au_c'].update({'pmin': 0,'pmax':None})
     par['ad_c'].update({'pmin': 0,'pmax':None})
-    par['bu_c'].update({'pmin': 0,'pmax':None})
-    par['bd_c'].update({'pmin': 0,'pmax':None})
+    #par['bu_c'].update({'pmin': 0,'pmax':None})
+    #par['bd_c'].update({'pmin': 0,'pmax':None})
 
     keys=par.keys()
     ordered_keys = range(len(keys))
@@ -105,7 +111,7 @@ class SAMPLER(object):
     
   def prepare_plot(self):
     par=self.par
-    ncols=4
+    ncols=3
     nrows=4
     py.figure(figsize=(ncols*2.5,nrows*2))
     cnt=0
@@ -126,14 +132,16 @@ class SAMPLER(object):
       else: 
         label_=True
 
-      AX[k].hist(\
+      H,E,p=AX[k].hist(\
         DF[k].values,\
         bins=bins,\
         histtype='step',\
         label=label,\
-        normed=True,\
+        normed=1,\
         range=par[k]['range']
         ) 
+      Hmax=np.amax(H)
+      AX[k].set_ylim(0,Hmax)
 
   def savefig(self):
     # cosmetics
@@ -159,7 +167,10 @@ class SAMPLER(object):
     F=open(fname,'r')
     L=F.readlines()
     F.close()
-    L=np.array([[float(x) for x in l.split()] for l in L])
+
+    L=[l.split() for l in L]
+    L=[[l[i] for i in [0,1,2,3,4,7,8,9,10,11,12]] for l in L]
+    L=np.array([[float(x) for x in l] for l in L])
     self.DFCPP=pd.DataFrame(L,columns=self.ordered_keys) 
 
 if __name__=='__main__':
