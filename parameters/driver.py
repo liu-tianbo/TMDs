@@ -48,33 +48,33 @@ class SAMPLER(object):
   def load_mean_values(self):
 
     par={}
-    par['BLNY']       = {'range':None,'idx': 0,'val': 2.36166e-02,'pmin':None,'pmax':None}
-    par['Nu']         = {'range':None,'idx': 1,'val': 2.61971e-01,'pmin':None,'pmax':None}
-    par['Nd']         = {'range':None,'idx': 2,'val':-1.95220e-01,'pmin':None,'pmax':None}
-    par['au']         = {'range':None,'idx': 3,'val': 1.69586e+00,'pmin':None,'pmax':None}
-    par['ad']         = {'range':None,'idx': 4,'val': 3.20601e-01,'pmin':None,'pmax':None}
-    par['bu']         = {'range':None,'idx': 5,'val': 1.46831e-06,'pmin':None,'pmax':None}
-    par['bd']         = {'range':None,'idx': 6,'val': 3.61390e-03,'pmin':None,'pmax':None}
-    par['Nu_collins'] = {'range':None,'idx': 7,'val': 8.54376e-01,'pmin':None,'pmax':None}
-    par['Nd_collins'] = {'range':None,'idx': 8,'val':-9.99999e-01,'pmin':None,'pmax':None}
-    par['au_collins'] = {'range':None,'idx': 9,'val': 6.88367e-01,'pmin':None,'pmax':None}
-    par['ad_collins'] = {'range':None,'idx':10,'val': 1.79434e+00,'pmin':None,'pmax':None}
-    par['bu_collins'] = {'range':None,'idx':11,'val': 4.81953e-02,'pmin':None,'pmax':None}
-    par['bd_collins'] = {'range':None,'idx':12,'val': 6.99676e+00,'pmin':None,'pmax':None}
+    par['BLNY']= {'range':None,'idx': 0,'val': 2.36166e-02,'pmin':None,'pmax':None}
+    par['Nu_c']= {'range':None,'idx': 1,'val': 2.61971e-01,'pmin':None,'pmax':None}
+    par['Nd_c']= {'range':None,'idx': 2,'val':-1.95220e-01,'pmin':None,'pmax':None}
+    par['au_c']= {'range':None,'idx': 3,'val': 1.69586e+00,'pmin':None,'pmax':None}
+    par['ad_c']= {'range':None,'idx': 4,'val': 3.20601e-01,'pmin':None,'pmax':None}
+    par['bu_c']= {'range':None,'idx': 5,'val': 1.46831e-06,'pmin':None,'pmax':None}
+    par['bd_c']= {'range':None,'idx': 6,'val': 3.61390e-03,'pmin':None,'pmax':None}
+    par['Nu_T']  = {'range':None,'idx': 7,'val': 8.54376e-01,'pmin':None,'pmax':None}
+    par['Nd_T']  = {'range':None,'idx': 8,'val':-9.99999e-01,'pmin':None,'pmax':None}
+    par['au_T']  = {'range':None,'idx': 9,'val': 6.88367e-01,'pmin':None,'pmax':None}
+    par['ad_T']  = {'range':None,'idx':10,'val': 1.79434e+00,'pmin':None,'pmax':None}
+    par['bu_T']  = {'range':None,'idx':11,'val': 4.81953e-02,'pmin':None,'pmax':None}
+    par['bd_T']  = {'range':None,'idx':12,'val': 6.99676e+00,'pmin':None,'pmax':None}
 
     par['BLNY'].update({'pmin': 0,'pmax':None})
-    par['Nu'].update({'pmin':-1,'pmax':1})
-    par['Nd'].update({'pmin':-1,'pmax':1})
-    par['au'].update({'pmin': 0,'pmax':None})
-    par['ad'].update({'pmin': 0,'pmax':None})
-    par['bu'].update({'pmin': 0,'pmax':None})
-    par['bd'].update({'pmin': 0,'pmax':None})
-    par['Nu_collins'].update({'pmin':-1,'pmax':1})
-    par['Nd_collins'].update({'pmin':-1,'pmax':1})
-    par['au_collins'].update({'pmin': 0,'pmax':None})
-    par['ad_collins'].update({'pmin': 0,'pmax':None})
-    par['bu_collins'].update({'pmin': 0,'pmax':None})
-    par['bd_collins'].update({'pmin': 0,'pmax':None})
+    par['Nu_T'].update({'pmin':-1,'pmax':1})
+    par['Nd_T'].update({'pmin':-1,'pmax':1})
+    par['au_T'].update({'pmin': 0,'pmax':None})
+    par['ad_T'].update({'pmin': 0,'pmax':None})
+    par['bu_T'].update({'pmin': 0,'pmax':None})
+    par['bd_T'].update({'pmin': 0,'pmax':None})
+    par['Nu_c'].update({'pmin':-1,'pmax':1})
+    par['Nd_c'].update({'pmin':-1,'pmax':1})
+    par['au_c'].update({'pmin': 0,'pmax':None})
+    par['ad_c'].update({'pmin': 0,'pmax':None})
+    par['bu_c'].update({'pmin': 0,'pmax':None})
+    par['bd_c'].update({'pmin': 0,'pmax':None})
 
     keys=par.keys()
     ordered_keys = range(len(keys))
@@ -148,7 +148,7 @@ class SAMPLER(object):
       ax.set_xlabel(tex(k.replace('_','~')))
       #ax.set_ylim(0,1)
       ax.axvline(par[k]['val'],color='k',ls='--',alpha=0.5,label=tex('mean'))
-      if k=='bd_collins': axl=ax
+      if k=='bd_T': axl=ax
 
     axl.legend(frameon=0,bbox_to_anchor=(2.3,1.0))
 
