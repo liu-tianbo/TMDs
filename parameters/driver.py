@@ -26,25 +26,55 @@ class SAMPLER(object):
     F.close()
     L=[l.strip() for l in L]
     L=[l for l in L if l!='']
-    cov=np.array([[float(x) for x in l.split()] for l in L])
-    self.cov=cov
-    
+    rho=np.array([[float(x) for x in l.split()] for l in L])
+    err=[]
+    err.append(7.17002e-04) 
+    err.append(2.46543e-02)
+    err.append(7.15875e-03)
+    err.append(7.59358e-03)
+    err.append(4.01160e-02)
+    err.append(5.38257e-01)
+    err.append(7.93746e-01)
+    err.append(8.65518e-02)
+    err.append(1.25156e-01)
+    err.append(4.33534e-02)
+    err.append(3.17379e-01)
+    err.append(3.88934e-02)
+    err.append(2.64818e+00)
+    err=np.array(err)
+
+    self.cov=np.einsum('ij,i,j->ij',rho,err,err)
+
   def load_mean_values(self):
 
     par={}
-    par['BLNY']       = {'idx': 0,'val': 2.36166e-02,'pmin': 0,'pmax':None}
-    par['Nu']         = {'idx': 1,'val': 2.61971e-01,'pmin':-1,'pmax':1}
-    par['Nd']         = {'idx': 2,'val':-1.95220e-01,'pmin':-1,'pmax':1}
-    par['au']         = {'idx': 3,'val': 1.69586e+00,'pmin': 0,'pmax':None}
-    par['ad']         = {'idx': 4,'val': 3.20601e-01,'pmin': 0,'pmax':None}
-    par['bu']         = {'idx': 5,'val': 1.46831e-06,'pmin': 0,'pmax':None}
-    par['bd']         = {'idx': 6,'val': 3.61390e-03,'pmin': 0,'pmax':None}
-    par['Nu_collins'] = {'idx': 7,'val': 8.54376e-01,'pmin':-1,'pmax':1}
-    par['Nd_collins'] = {'idx': 8,'val':-9.99999e-01,'pmin':-1,'pmax':1}
-    par['au_collins'] = {'idx': 9,'val': 6.88367e-01,'pmin': 0,'pmax':None}
-    par['ad_collins'] = {'idx':10,'val': 1.79434e+00,'pmin': 0,'pmax':None}
-    par['bu_collins'] = {'idx':11,'val': 4.81953e-02,'pmin': 0,'pmax':None}
-    par['bd_collins'] = {'idx':12,'val': 6.99676e+00,'pmin': 0,'pmax':None}
+    par['BLNY']       = {'range':None,'idx': 0,'val': 2.36166e-02,'pmin':None,'pmax':None}
+    par['Nu']         = {'range':None,'idx': 1,'val': 2.61971e-01,'pmin':None,'pmax':None}
+    par['Nd']         = {'range':None,'idx': 2,'val':-1.95220e-01,'pmin':None,'pmax':None}
+    par['au']         = {'range':None,'idx': 3,'val': 1.69586e+00,'pmin':None,'pmax':None}
+    par['ad']         = {'range':None,'idx': 4,'val': 3.20601e-01,'pmin':None,'pmax':None}
+    par['bu']         = {'range':None,'idx': 5,'val': 1.46831e-06,'pmin':None,'pmax':None}
+    par['bd']         = {'range':None,'idx': 6,'val': 3.61390e-03,'pmin':None,'pmax':None}
+    par['Nu_collins'] = {'range':None,'idx': 7,'val': 8.54376e-01,'pmin':None,'pmax':None}
+    par['Nd_collins'] = {'range':None,'idx': 8,'val':-9.99999e-01,'pmin':None,'pmax':None}
+    par['au_collins'] = {'range':None,'idx': 9,'val': 6.88367e-01,'pmin':None,'pmax':None}
+    par['ad_collins'] = {'range':None,'idx':10,'val': 1.79434e+00,'pmin':None,'pmax':None}
+    par['bu_collins'] = {'range':None,'idx':11,'val': 4.81953e-02,'pmin':None,'pmax':None}
+    par['bd_collins'] = {'range':None,'idx':12,'val': 6.99676e+00,'pmin':None,'pmax':None}
+
+    par['BLNY'].update({'pmin': 0,'pmax':None})
+    par['Nu'].update({'pmin':-1,'pmax':1})
+    par['Nd'].update({'pmin':-1,'pmax':1})
+    par['au'].update({'pmin': 0,'pmax':None})
+    par['ad'].update({'pmin': 0,'pmax':None})
+    par['bu'].update({'pmin': 0,'pmax':None})
+    par['bd'].update({'pmin': 0,'pmax':None})
+    par['Nu_collins'].update({'pmin':-1,'pmax':1})
+    par['Nd_collins'].update({'pmin':-1,'pmax':1})
+    par['au_collins'].update({'pmin': 0,'pmax':None})
+    par['ad_collins'].update({'pmin': 0,'pmax':None})
+    par['bu_collins'].update({'pmin': 0,'pmax':None})
+    par['bd_collins'].update({'pmin': 0,'pmax':None})
 
     keys=par.keys()
     ordered_keys = range(len(keys))
@@ -66,7 +96,7 @@ class SAMPLER(object):
       if pmax!=None: DF_=DF_[DF_[k]<pmax]
     return DF_
 
-  def gen_sample(self,npar=10000):
+  def gen_sample(self,npar=100000):
     mean=self.mean
     cov=self.cov
     sample=np.random.multivariate_normal(mean,cov,npar)
@@ -101,7 +131,8 @@ class SAMPLER(object):
         bins=bins,\
         histtype='step',\
         label=label,\
-        normed=True
+        normed=True,\
+        range=par[k]['range']
         ) 
 
   def savefig(self):
@@ -115,7 +146,7 @@ class SAMPLER(object):
       ax.locator_params(axis = 'x', nbins=5)
       #ax.text(0.01,0.8,tex(k.replace('_','~')),transform=ax.transAxes)
       ax.set_xlabel(tex(k.replace('_','~')))
-      ax.set_ylim(0,1)
+      #ax.set_ylim(0,1)
       ax.axvline(par[k]['val'],color='k',ls='--',alpha=0.5,label=tex('mean'))
       if k=='bd_collins': axl=ax
 
@@ -135,7 +166,7 @@ if __name__=='__main__':
   sam=SAMPLER()
   sam.gen_sample()
   sam.plot_sample(sam.DF0,tex('sampler'))
-  sam.plot_sample(sam.DF1,tex('sampler~with~cuts'),bins=10)
+  sam.plot_sample(sam.DF1,tex('sampler~with~cuts'))
   sam.load_cpp_sample('data/new_parameters_aug26.dat')
   sam.plot_sample(sam.DFCPP,tex('cpp'))
   sam.savefig()
