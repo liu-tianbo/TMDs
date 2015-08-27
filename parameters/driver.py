@@ -102,13 +102,14 @@ class SAMPLER(object):
       if pmax!=None: DF_=DF_[DF_[k]<pmax]
     return DF_
 
-  def gen_sample(self,npar=100000):
+  def gen_sample(self,npar=1000000):
     mean=self.mean
     cov=self.cov
     sample=np.random.multivariate_normal(mean,cov,npar)
     self.DF0=pd.DataFrame(sample,columns=self.ordered_keys) 
     self.DF1=self.apply_cuts(self.DF0)
-    
+    print self.DF1.index.size
+
   def prepare_plot(self):
     par=self.par
     ncols=3
@@ -173,6 +174,33 @@ class SAMPLER(object):
     L=np.array([[float(x) for x in l] for l in L])
     self.DFCPP=pd.DataFrame(L,columns=self.ordered_keys) 
 
+  def save_sample(self):
+    DF1=self.DF1
+    sample=np.zeros((13,DF1.index.size))
+    sample[0]  = DF1['BLNY'].values
+    sample[1]  = DF1['Nu_c'].values 
+    sample[2]  = DF1['Nd_c'].values
+    sample[3]  = DF1['au_c'].values
+    sample[4]  = DF1['ad_c'].values
+    sample[5]  = np.zeros(DF1.index.size)
+    sample[6]  = np.zeros(DF1.index.size)
+    sample[7]  = DF1['Nu_T'].values
+    sample[8]  = DF1['Nd_T'].values
+    sample[9]  = DF1['au_T'].values
+    sample[10] = DF1['ad_T'].values
+    sample[11] = DF1['bu_T'].values
+    sample[12] = DF1['bd_T'].values
+    sample=np.transpose(sample)
+    np.savetxt('data/params.dat',sample,delimiter=' ',fmt='%0.4e')
+
+
+
+
+
+
+
+
+
 if __name__=='__main__':
   sam=SAMPLER()
   sam.gen_sample()
@@ -181,6 +209,7 @@ if __name__=='__main__':
   sam.load_cpp_sample('data/new_parameters_aug26.dat')
   sam.plot_sample(sam.DFCPP,tex('cpp'))
   sam.savefig()
+  sam.save_sample()
 
 
 
