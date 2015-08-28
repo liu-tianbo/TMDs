@@ -182,8 +182,8 @@ class SAMPLER(object):
     sample[2]  = DF1['Nd_c'].values
     sample[3]  = DF1['au_c'].values
     sample[4]  = DF1['ad_c'].values
-    sample[5]  = np.zeros(DF1.index.size)
-    sample[6]  = np.zeros(DF1.index.size)
+    sample[5]  = np.zeros(DF1.index.size) + 1.46e-6
+    sample[6]  = np.zeros(DF1.index.size) + 3.61e-3
     sample[7]  = DF1['Nu_T'].values
     sample[8]  = DF1['Nd_T'].values
     sample[9]  = DF1['au_T'].values
@@ -192,12 +192,6 @@ class SAMPLER(object):
     sample[12] = DF1['bd_T'].values
     sample=np.transpose(sample)
     np.savetxt('data/params.dat',sample,delimiter=' ',fmt='%0.4e')
-
-
-
-
-
-
 
 
 
