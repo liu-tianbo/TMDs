@@ -1,7 +1,6 @@
 #################################
 ## Colllins Prediction Study
-##, -- by Zhihong Ye 
-##     in collaborating with Alexei Prokudin, Kalyan Allada and Nobuo Sato
+##, -- by Alexei Prokudin, Kalyan Allada, Nobuo Sato, and Zhihong Ye
 #################################
 
 ------------------------------------------------------------------
