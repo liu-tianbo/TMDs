@@ -49,7 +49,7 @@ class SAMPLER(object):
     err.append(2.64818e+00)
     err=np.array(err)
 
-    self.cov=np.einsum('ij,i,j->ij',rho,err,err)
+    self.cov=np.einsum('ij,i,j->ij',rho,err,err)/100000000.0
 
   def load_mean_values(self):
 
@@ -191,17 +191,15 @@ class SAMPLER(object):
     sample[11] = DF1['bu_T'].values
     sample[12] = DF1['bd_T'].values
     sample=np.transpose(sample)
-    np.savetxt('data/params.dat',sample,delimiter=' ',fmt='%0.4e')
-
-
+    np.savetxt('data/params-f100000000.dat',sample,delimiter=' ',fmt='%0.4e')
 
 if __name__=='__main__':
   sam=SAMPLER()
   sam.gen_sample()
   sam.plot_sample(sam.DF0,tex('sampler'))
   sam.plot_sample(sam.DF1,tex('sampler~with~cuts'))
-  sam.load_cpp_sample('data/new_parameters_aug26.dat')
-  sam.plot_sample(sam.DFCPP,tex('cpp'))
+  #sam.load_cpp_sample('data/new_parameters_aug26.dat')
+  #sam.plot_sample(sam.DFCPP,tex('cpp'))
   sam.savefig()
   sam.save_sample()
 
