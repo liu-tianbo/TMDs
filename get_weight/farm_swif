@@ -1,0 +1,86 @@
+#!/bin/sh
+
+# Usage: farm_list
+#
+# This script creates batch_krun and jscript_krun in batch_files directory
+# and submits the job to the farms
+#
+# Feb. 22, 2011 Zhihong Ye
+#
+
+home=${PWD}     
+# The directory where replay_script is
+# Event you want to start with,gtotal=-1 means to replay all
+username=${USER}@jlab.org    # email which will be notify when the job is done
+#
+# Check whether the raw data are in cache or not
+#
+
+#
+# Function to check if input is an integer
+#
+is_integer() {
+	case $1 in
+		*[!0-9]*) return 1;;
+		*) return 0;;
+	esac
+}
+
+exp=$1
+tgt=$2
+pid=$3
+scale=$4
+
+if ! [ -d batch_files ]
+then 
+	echo "----------------------------------------------------------------"
+	echo "I need batch_files directory. I am going to create it"
+	echo  
+	mkdir batch_files
+fi
+
+#
+echo
+#
+# Write file batch_krun
+#
+rm -f batch_files/batch_${exp}_${tgt}_${pid}_${scale}
+echo "#!/bin/sh" > batch_files/batch_${exp}_${tgt}_${pid}_${scale}
+echo "cd "${home}"/" >>batch_files/batch_${exp}_${tgt}_${pid}_${scale}
+echo "./Get_Weight -E"${exp}" -T"${tgt}" -P"${pid}" -N"${scale}" ">>batch_files/batch_${exp}_${tgt}_${pid}_${scale}
+#  
+chmod +x batch_files/batch_${exp}_${tgt}_${pid}_${scale}
+
+echo "batch_files/batch_"${exp}_${tgt}_${pid}_${scale}" has been created!"
+echo " "
+
+#
+# Create jsub script
+#
+rm -f batch_files/jscript_${exp}_${tgt}_${pid}_${scale}
+echo "PROJECT     solid" > batch_files/jscript_${exp}_${tgt}_${pid}_${scale}
+echo "COMMAND     "$home"/batch_files/batch_"${exp}_${tgt}_${pid}_${scale} >>batch_files/jscript_${exp}_${tgt}_${pid}_${scale}
+echo "JOBNAME     collins_"${exp}_${tgt}_${pid}_${scale} >>batch_files/jscript_${exp}_${tgt}_${pid}_${scale}
+echo "TRACK       simulation" >> batch_files/jscript_${exp}_${tgt}_${pid}_${scale}
+echo "TIME        400" >>batch_files/jscript_${exp}_${tgt}_${pid}_${scale}
+echo "MEMORY      4000 MB" >>batch_files/jscript_${exp}_${tgt}_${pid}_${scale}
+echo "OS          centos65" >>batch_files/jscript_${exp}_${tgt}_${pid}_${scale}
+
+echo "batch_files/jscript_"${exp}_${tgt}_${pid}_${scale}" has been created."
+echo " "
+#
+# Submit job to the farm
+jsub batch_files/jscript_${exp}_${tgt}_${pid}_${scale}
+#swif add-jsub -workflow solid_collins -create -script ${home}'/batch_files/jscript_'${exp}_${tgt}_${pid}_${scale}
+#
+#another way to submit swif jobs:
+#swife add-job -workflow solid_collins -project solid -track simulation -create -name 'collins_all_'${exp}_${tgt}_${pid}_${scale} -cores 1 -ram 1GB -time 4000min -shell /bin/tcsh 'batch_files/batch'${exp}_${tgt}_${pid}_${scale}
+
+#swif run -workflow solid_collins
+#
+echo "Job "${exp}_${tgt}_${pid}_${scale} "has been submited!"
+echo
+echo
+#
+#sleep 0.1
+

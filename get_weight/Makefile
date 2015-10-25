@@ -4,6 +4,7 @@
 #-------------------------------------------
 
 PROGRAM = Get_Weight
+
 CFLAGS = $(shell $(ROOTSYS)/bin/root-config --cflags)
 LIBS   = $(shell $(ROOTSYS)/bin/root-config --libs)
 GLIBS  = $(shell $(ROOTSYS)/bin/root-config --glibs)

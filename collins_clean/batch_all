@@ -1,0 +1,55 @@
+#!/bin/sh
+RNUM=$1
+COUNT=0
+while [ $COUNT -lt 10 ]; do
+	let RNUM0=RNUM*10+COUNT
+	#SoLID-He3-PIP
+	if ! [ -e "./solid_3he_pip/solid_data_3he_pip_"$RNUM0".dat" ]; then
+		echo "Working on n-pip N = "$RNUM0
+		./collins.exe -SOLID -NEUTRON -PI+ -DATA $RNUM0 
+	else
+		echo "Job SoLID-3He-pip is done for N = "$RNUM0", skipped!"
+	fi
+	
+	#SoLID-He3-PIM
+	if ! [ -e "./solid_3he_pim/solid_data_3he_pim_"$RNUM0".dat" ]; then
+		echo "Working on n-pim N = "$RNUM0
+		./collins.exe -SOLID -NEUTRON -PI- -DATA $RNUM0 
+	else
+		echo "Job SoLID-3He-pim is done for N = "$RNUM0", skipped!"
+	fi
+
+	#SoLID-P-PIP
+	if ! [ -e "./solid_p_pip/solid_data_p_pip_"$RNUM0".dat" ]; then
+		echo "Working on p-pip N = "$RNUM0
+		./collins.exe -SOLID -PROTON -PI+ -DATA $RNUM0 
+	else
+		echo "Job SoLID-P-pip is done for N = "$RNUM0", skipped!"
+	fi
+	
+	#SoLID-P-PIM
+	if ! [ -e "./solid_p_pim/solid_data_p_pim_"$RNUM0".dat" ]; then
+		echo "Working on p-pim N = "$RNUM0
+		./collins.exe -SOLID -PROTON -PI- -DATA $RNUM0 
+	else
+		echo "Job SoLID-P-pim is done for N = "$RNUM0", skipped!"
+	fi
+
+	#CLAS-P-PIP
+	if ! [ -e "./clas_p_pip/clas_data_p_pip_"$RNUM0".dat" ]; then
+		echo "Working on clas-pip N = "$RNUM0
+		./collins.exe -CLAS -PROTON -PI+ -DATA $RNUM0 
+	else
+		echo "Job CLAS-P-pip is done for N = "$RNUM0", skipped!"
+	fi
+	
+	#CLAS-P-PIM
+	if ! [ -e "./clas_p_pim/clas_data_p_pim_"$RNUM0".dat" ]; then
+		echo "Working on clas-pim N = "$RNUM0
+		./collins.exe -CLAS -PROTON -PI- -DATA $RNUM0 
+	else
+		echo "Job CKAS-P-pim is done for N = "$RNUM0", skipped!"
+	fi
+
+	let COUNT=COUNT+1
+done
