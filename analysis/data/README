@@ -1,0 +1,3 @@
+The data format is:
+  Replica_ID   ChiSQ   Weight(normalized)  deltaU_full_integral(x=0~1)   deltaD_full_integral(x=0~1)   deltaU_exp_range(roughtly x=0.2~0.8)   deltaD_exp_range(roughtly x=0.2~0.8)
+                   
