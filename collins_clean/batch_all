@@ -4,7 +4,7 @@ COUNT=0
 while [ $COUNT -lt 10 ]; do
 	let RNUM0=RNUM*10+COUNT
 	#SoLID-He3-PIP
-	if ! [ -e "./solid_3he_pip/solid_data_3he_pip_"$RNUM0".dat" ]; then
+	if ! [ -e "./solid_3he_pip/new_solid_data_3he_pip_"$RNUM0".dat" ]; then
 		echo "Working on n-pip N = "$RNUM0
 		./collins.exe -SOLID -NEUTRON -PI+ -DATA $RNUM0 
 	else
@@ -12,7 +12,7 @@ while [ $COUNT -lt 10 ]; do
 	fi
 	
 	#SoLID-He3-PIM
-	if ! [ -e "./solid_3he_pim/solid_data_3he_pim_"$RNUM0".dat" ]; then
+	if ! [ -e "./solid_3he_pim/new_solid_data_3he_pim_"$RNUM0".dat" ]; then
 		echo "Working on n-pim N = "$RNUM0
 		./collins.exe -SOLID -NEUTRON -PI- -DATA $RNUM0 
 	else
@@ -20,7 +20,7 @@ while [ $COUNT -lt 10 ]; do
 	fi
 
 	#SoLID-P-PIP
-	if ! [ -e "./solid_p_pip/solid_data_p_pip_"$RNUM0".dat" ]; then
+	if ! [ -e "./solid_p_pip/new_solid_data_p_pip_"$RNUM0".dat" ]; then
 		echo "Working on p-pip N = "$RNUM0
 		./collins.exe -SOLID -PROTON -PI+ -DATA $RNUM0 
 	else
@@ -28,7 +28,7 @@ while [ $COUNT -lt 10 ]; do
 	fi
 	
 	#SoLID-P-PIM
-	if ! [ -e "./solid_p_pim/solid_data_p_pim_"$RNUM0".dat" ]; then
+	if ! [ -e "./solid_p_pim/new_solid_data_p_pim_"$RNUM0".dat" ]; then
 		echo "Working on p-pim N = "$RNUM0
 		./collins.exe -SOLID -PROTON -PI- -DATA $RNUM0 
 	else

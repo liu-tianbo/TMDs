@@ -1,0 +1,25 @@
+#!/bin/sh
+RNUM=$1
+COUNT=0
+while [ $COUNT -lt 10 ]; do
+	let RNUM0=RNUM*10+COUNT
+	#SoLID-He3-PIP
+		./collins.exe -SOLID -NEUTRON -PI+ -DATA $RNUM0 
+	
+	#SoLID-He3-PIM
+		./collins.exe -SOLID -NEUTRON -PI- -DATA $RNUM0 
+
+	#SoLID-P-PIP
+		./collins.exe -SOLID -PROTON -PI+ -DATA $RNUM0 
+	
+	#SoLID-P-PIM
+		./collins.exe -SOLID -PROTON -PI- -DATA $RNUM0 
+
+	#CLAS-P-PIP
+		./collins.exe -CLAS -PROTON -PI+ -DATA $RNUM0 
+	
+	#CLAS-P-PIM
+		./collins.exe -CLAS -PROTON -PI- -DATA $RNUM0 
+
+	let COUNT=COUNT+1
+done

@@ -42,11 +42,11 @@ fi
 # Write file batch_krun
 #
 let rnum10=rnum*10
-if ! [ -e ${home}"/solid_3he_pip/solid_data_3he_pip_"${rnum10}".dat" ]; then
+if ! [ -e ${home}"/solid_3he_pip/new_solid_data_3he_pip_"${rnum10}".dat" ]; then
 	rm -f batch_files/batch_a_${rnum}
 	echo "#!/bin/sh" > batch_files/batch_a_${rnum}
 	echo "cd "${home}"/" >>batch_files/batch_a_${rnum}
-	echo "./batch_all "$rnum" ">>batch_files/batch_a_${rnum}
+    echo "./batch_all "$rnum" ">>batch_files/batch_a_${rnum}
 	#  
 	chmod +x batch_files/batch_a_${rnum}
 
@@ -62,7 +62,7 @@ if ! [ -e ${home}"/solid_3he_pip/solid_data_3he_pip_"${rnum10}".dat" ]; then
 	echo "JOBNAME     collins_all_"${rnum} >>batch_files/jscript_a_${rnum}
 	echo "TRACK       simulation" >> batch_files/jscript_a_${rnum}
 	echo "TIME        4000" >>batch_files/jscript_a_${rnum}
-	echo "MEMORY      1000 MB" >>batch_files/jscript_a_${rnum}
+	echo "MEMORY      4000 MB" >>batch_files/jscript_a_${rnum}
 	echo "OS          centos65" >>batch_files/jscript_a_${rnum}
 
 	echo "batch_files/jscript_a_"${rnum}" has been created."
@@ -70,19 +70,9 @@ if ! [ -e ${home}"/solid_3he_pip/solid_data_3he_pip_"${rnum10}".dat" ]; then
 	echo "Now, let us wait for the farms..."
 	echo " "
 	#
-	# Submit job to the farm with jsub, need to comment out the "swif" method
-	###################
-	#jsub batch_files/jscript_a_${rnum}
-	###################
+	# Submit job to the farm
+	jsub batch_files/jscript_a_${rnum}
 	#
-	# Submit job to the farm with swif, need to comment out the "jsub" method
-	###################
-	swif add-jsub -workflow solid_collins -create -script ${home}'/batch_files/jscript_a_'${rnum}
-    #######another way to submit swif jobs:
-	#swife add-job -workflow solid_collins -project solid -track simulation -create -name 'collins_all_'${rnum} -cores 1 -ram 1GB -time 4000min -shell /bin/tcsh 'batch_files/batch_a'${rnum}
-	swif run -workflow solid_collins
-	###################
-    #
 	#
 	echo "Job "${rnum} "has been submited!"
 	echo

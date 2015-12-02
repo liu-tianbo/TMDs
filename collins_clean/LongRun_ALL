@@ -12,7 +12,9 @@ chop($erunnum);
 
 if($srunnum<=$erunnum){
 	for($i=$srunnum;$i<=$erunnum;$i++){
-		print `./gofarm_all $i  \n`;
+		print `./gofarm_f1K $i  \n`;
+		#print `./gofarm_all $i  \n`;
+		#print `./gofarm_swif $i  \n`;
 	}
 }
 else {

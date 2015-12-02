@@ -2,13 +2,15 @@ void Get_Psudo(){
 	double Z[2000], xB[2000], Q2[2000], Pt[2000], Sigma_Unp[2000], Asym[2000], Asym_Err[2000], deltaU[2000], deltaD[2000], deltaU_SoLID[2000], deltaD_SoLID[2000];
     int Bin[2000];
 
-	TString Norm=""; cerr<<"--- Norm = "; cin >> Norm;
 	TString experiment="x"; cerr<<"--- Experiment (solid or clas or sbs) = "; cin >> experiment;
 	TString target="x"; cerr<<"--- Target (3he or p) = "; cin >> target;
 	TString particle="x"; cerr<<"--- Particle (pip or pim)"; cin >> particle;
 
-	//ifstream infile(Form("../collins_clean/f100K_%s_%s_%s/new_%s_data_%s_%s_0.dat",experiment.Data(),target.Data(), particle.Data(),experiment.Data(),target.Data(), particle.Data()));
-	ifstream infile(Form("../collins_clean/%s_%s_%s_%s/new_%s_data_%s_%s_0.dat",Norm.Data(),experiment.Data(),target.Data(), particle.Data(),experiment.Data(),target.Data(), particle.Data()));
+    //TString FileName = Form("%s_data_%s_%s_%d.dat",
+    TString FileName = Form("/w/halla-scifs2/solid/yez/TMDs/collins_clean_new/f1K_%s_%s_%s/new_%s_data_%s_%s_%d.dat",
+            experiment.Data(),target.Data(),particle.Data(),
+            experiment.Data(),target.Data(),particle.Data(),0);
+    ifstream infile(FileName.Data());
 
 	int i=0;
 	while(!(infile.eof())){
@@ -20,7 +22,7 @@ void Get_Psudo(){
 	const int Bin_Total = i-1;
 	cerr<<"--- Total Bin = "<< Bin_Total<<endl;
 
-	ofstream outfile(Form("%s_new_%s_data_%s_%s_0.dat",Norm.Data(),experiment.Data(),target.Data(), particle.Data(),experiment.Data(),target.Data(), particle.Data()));
+	ofstream outfile(Form("f1K_new_%s_data_%s_%s_0.dat",experiment.Data(),target.Data(), particle.Data(),experiment.Data(),target.Data(), particle.Data()));
 	double Asym_New[Bin_Total];
 	double ChiSQ;
 	gRandom->SetSeed(0);

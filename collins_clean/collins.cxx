@@ -1874,7 +1874,7 @@ int main(int argc, char **argv)
 	//const int long_list = 100000; // number of parameter sets generated
 	int set_used = 0; // best fit
 
-	static double par_space[5000000][13]; // each line consists of 13 parameters
+	static double par_space[500000][13]; // each line consists of 13 parameters
 
 	double x_min_jlab = 1.; // to store min and max value of x in SOLID
 	double x_max_jlab = 0.; 
@@ -1882,8 +1882,8 @@ int main(int argc, char **argv)
 
 	// READ THE GENERATED PARAMETER SETS BEGIN 
 	//ifstream infile_par ("error_estimate/new_parameters.dat" ); // this is the file with generated parameters
-	//ifstream infile_par ("error_estimate/params.dat" ); // this is the file with generated parameters
-	ifstream infile_par ("error_estimate/params.dat" ); // this is the file with generated parameters
+	ifstream infile_par ("error_estimate/params1k.dat" ); // this is the file with generated parameters
+	//ifstream infile_par ("error_estimate/first_param.dat" ); // this is the file with generated parameters
 
 	int j=0;
 	int bin_number;
@@ -2063,7 +2063,7 @@ int main(int argc, char **argv)
 
 		TString filename; 
 
-		filename.Form("./%s_unpolarised_%s_%s.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data());
+		filename.Form("./f1K_%s_unpolarised_%s_%s.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data());
 		ofstream outfile(filename);
 
 		// format of the pseudo-data
@@ -2191,7 +2191,7 @@ int main(int argc, char **argv)
 
 
 		//WRITE ALL DATA IN A DATA FILE   
-		filename.Form("./%s_%s_%s/new_%s_data_%s_%s_%d.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data(),EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data(),set_used);
+		filename.Form("./f1K_%s_%s_%s/new_%s_data_%s_%s_%d.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data(),EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data(),set_used);
 
 		ofstream outfile(filename);	
 		// format of the pseudo-data
@@ -2218,7 +2218,7 @@ int main(int argc, char **argv)
 		double step = (xmax-xmin)/(npoints-1);
 
 		TString filename_write;
-		filename_write.Form("./%s_%s_%s/new_transversity_u_%d.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data(),set_used);
+		filename_write.Form("/f1K_%s_%s_%s/new_transversity_u_%d.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data(),set_used);
 
 		ofstream outfile_u(filename_write);
 
@@ -2231,7 +2231,7 @@ int main(int argc, char **argv)
 		outfile_u.close(); 
 
 
-		filename_write.Form("./%s_%s_%s/new_transversity_d_%d.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data(),set_used);
+		filename_write.Form("./f1K_%s_%s_%s/new_transversity_d_%d.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data(),set_used);
 
 		ofstream outfile_d(filename_write);
 

@@ -47,12 +47,13 @@
 using namespace std;
 
 void Get_Weight(TString Experiment,TString Target,TString Particle, int Scale_Factor=0){
-	const int N_Replica = 170000;
+	const int N_Replica = 5000;
 	//TString Particle = ""; cerr<<"Particle = (pip or pim)"; cin >> Particle;
 	
 	/*Load the best fit values{{{*/
     //TString infile_name0 = Form("../psudo_data/new_%s_data_%s_%s_0.dat",Experiment.Data(),Target.Data(),Particle.Data());
-    TString infile_name0 = Form("../psudo_data/new_%s_data_%s_%s_0.dat",Experiment.Data(),Target.Data(),Particle.Data());
+    //TString infile_name0 = Form("/w/halla-scifs2/solid/yez/TMDs/psudo_data/new_%s_data_%s_%s_0.dat",Experiment.Data(),Target.Data(),Particle.Data());
+    TString infile_name0 = Form("/volatile/halla/solid/yez/TMDs/psudo_data/f1K_new_%s_data_%s_%s_0.dat",Experiment.Data(),Target.Data(),Particle.Data());
 	ifstream infile0(infile_name0.Data());
 	double Z0[2000], xB0[2000], Q20[2000], Pt0[2000], Sigma_Unp0[2000], Asym0[2000], Asym_New0[2000], Asym_Err0[2000];
 	double deltaU0[2000], deltaD0[2000], deltaU_EX0[2000], deltaD_EX0[2000];
@@ -71,7 +72,7 @@ void Get_Weight(TString Experiment,TString Target,TString Particle, int Scale_Fa
 	/*}}}*/
 
 	/*Load replica and calculate weight{{{*/
-	ofstream outfile(Form("./results/weight_%s_%s_%s_%d.dat",Experiment.Data(),Target.Data(),Particle.Data(),Scale_Factor));
+	ofstream outfile(Form("./results/f1K_weight_%s_%s_%s_%d_fake.dat",Experiment.Data(),Target.Data(),Particle.Data(),Scale_Factor));
 	gRandom->SetSeed(0);
 	static double Weight[N_Replica], ChiSQ[N_Replica];
 	static double deltaU_Cal[N_Replica], deltaD_Cal[N_Replica];
@@ -88,7 +89,7 @@ void Get_Weight(TString Experiment,TString Target,TString Particle, int Scale_Fa
 	double Weight_Sum=1e-308;//always starting from the smallest number to reduce round-up errors
 	for(int j=0;j<N_Replica;j++){
 		i=0;
-		FileName = Form("/volatile/halla/solid/yez/TMDs/collins_clean/%s_%s_%s/new_%s_data_%s_%s_%d.dat",Experiment.Data(),Target.Data(),Particle.Data(),Experiment.Data(),Target.Data(),Particle.Data(),j);
+		FileName = Form("/work/halla/solid/yez/TMDs/collins_clean_new/f1K_%s_%s_%s/new_%s_data_%s_%s_%d.dat",Experiment.Data(),Target.Data(),Particle.Data(),Experiment.Data(),Target.Data(),Particle.Data(),j);
 		ifstream infile(FileName);
 		if(infile){
 			//cerr<<"---- Reading file-->"<<FileName.Data()<<"\r";
@@ -111,7 +112,8 @@ void Get_Weight(TString Experiment,TString Target,TString Particle, int Scale_Fa
 
 			ChiSQ[j] = 0;
 			for(int k=0;k<Bin_Total;k++){
-				ChiSQ[j] += pow( (Asym_New0[k]-Asym[k])/(Asym_Err0[k]*Scale_Factor),2);
+				ChiSQ[j] += pow( (Asym0[k]-Asym[k])/(Asym_Err0[k]*Scale_Factor),2);
+				//ChiSQ[j] += pow( (Asym_New0[k]-Asym[k])/(Asym_Err0[k]*Scale_Factor),2);
 				//cerr<<Form("--- N=%d, k=%d, Asym0 = %10.4e, Asym = %10.4e, Asym_Err = %10.4e, ChiSQ=%f",
 				//		j,k, Asym_New0[k], Asym[k], Asym_Err[k], ChiSQ[j])<<endl;
 			}
@@ -140,7 +142,7 @@ void Get_Weight(TString Experiment,TString Target,TString Particle, int Scale_Fa
 	double iAsym,iAsymErr,iChiSQ,iW,iD,iU,iD0,iU0,iZ,iX,iQ2,iPt,iD_EX,iU_EX,iD_EX0,iU_EX0,iSigma, iHu, iHd, iHu0, iHd0;
 	int iBin, iN,iCount;
 
-	TFile *file = new TFile(Form("./results/Weight_%s_%s_%s_F%d.root",Experiment.Data(),Target.Data(),Particle.Data(),Scale_Factor),"recreate");
+	TFile *file = new TFile(Form("./results/f1K_Weight_%s_%s_%s_F%d.root",Experiment.Data(),Target.Data(),Particle.Data(),Scale_Factor),"recreate");
 	TTree *T = new TTree("T","T");
 	TTree *W = new TTree("W","W");
 	TTree *H = new TTree("H","H");
@@ -204,15 +206,15 @@ void Get_Weight(TString Experiment,TString Target,TString Particle, int Scale_Fa
 		iN = j;
 		W->Fill();
 			
-		outfile<<Form("%10d %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e",j,ChiSQ[j], Weight[j],deltaU_Cal[j],deltaD_Cal[j],deltaU_EX_Cal[j],deltaD_EX_Cal[j])<<endl;
+		if(Weight[j]>-1.)
+			outfile<<Form("%10d %10.4e %10.4e %10.4e %10.4e %10.4e %10.4e",j,ChiSQ[j], Weight[j],deltaU_Cal[j],deltaD_Cal[j],deltaU_EX_Cal[j],deltaD_EX_Cal[j])<<endl;
 		cerr<<Form("--- j=%10d, ChiSQ = %10.4e, Weight = %10.4e",j,ChiSQ[j], Weight[j])<<"\r";//<<endl;
 	}
 
 	for(int j=0;j<N_Replica;j++){
 		i=0;
 
-		FileName = Form("/volatile/halla/solid/yez/TMDs/collins_clean/%s_%s_%s/new_%s_data_%s_%s_%d.dat",Experiment.Data(),Target.Data(),Particle.Data(),Experiment.Data(),Target.Data(),Particle.Data(),j);
-		//FileName = Form("../collins_clean/%s_%s_%s/new_%s_data_%s_%s_%d.dat",Experiment.Data(),Target.Data(),Particle.Data(),Experiment.Data(),Target.Data(),Particle.Data(),j);
+		FileName = Form("/work/halla/solid/yez/TMDs/collins_clean_new/f1K_%s_%s_%s/new_%s_data_%s_%s_%d.dat",Experiment.Data(),Target.Data(),Particle.Data(),Experiment.Data(),Target.Data(),Particle.Data(),j);
 		ifstream infile(FileName);
 		if(infile){
 			//cerr<<"---- Reading file-->"<<FileName.Data()<<endl;
@@ -250,9 +252,9 @@ void Get_Weight(TString Experiment,TString Target,TString Particle, int Scale_Fa
 	for(int j=0;j<N_Replica;j++){
 		i=0;
 		iN=0;
-		FileName = Form("/volatile/halla/solid/yez/TMDs/collins_clean/%s_%s_%s/new_transversity_u_%d.dat",Experiment.Data(),Target.Data(), Particle.Data(),j);
+		FileName = Form("/work/halla/solid/yez/TMDs/collins_clean_new/f1K_%s_%s_%s/new_transversity_u_%d.dat",Experiment.Data(),Target.Data(), Particle.Data(),j);
 		ifstream infile0(FileName);
-		FileName = Form("/volatile/halla/solid/yez/TMDs/collins_clean/%s_%s_%s/new_transversity_d_%d.dat",Experiment.Data(),Target.Data(), Particle.Data(),j);
+		FileName = Form("/work/halla/solid/yez/TMDs/collins_clean_new/f1K_%s_%s_%s/new_transversity_d_%d.dat",Experiment.Data(),Target.Data(), Particle.Data(),j);
 		ifstream infile1(FileName);
 		if(infile0){
 			//while(!(infile0.eof())){

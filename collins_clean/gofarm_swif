@@ -1,0 +1,88 @@
+#!/bin/sh
+
+# Usage: farm_list
+#
+# This script creates batch_krun and jscript_krun in batch_files directory
+# and submits the job to the farms
+#
+# Feb. 22, 2011 Zhihong Ye
+#
+
+home=${PWD}     
+# The directory where replay_script is
+# Event you want to start with,gtotal=-1 means to replay all
+username=${USER}@jlab.org    # email which will be notify when the job is done
+#
+# Check whether the raw data are in cache or not
+#
+
+#
+# Function to check if input is an integer
+#
+is_integer() {
+ case $1 in
+  *[!0-9]*) return 1;;
+  *) return 0;;
+ esac
+}
+
+rnum=$1
+
+if ! [ -d batch_files ]
+	then 
+	echo "----------------------------------------------------------------"
+	echo "I need batch_files directory. I am going to create it"
+	echo  
+	mkdir batch_files
+fi
+
+#
+    echo
+#
+# Write file batch_krun
+#
+let rnum10=rnum*10
+if ! [ -e ${home}"/f100K_clas_p_pim/new_clas_data_p_pim_"${rnum10}".dat" ]; then
+	rm -f batch_files/batch_a_${rnum}
+	echo "#!/bin/sh" > batch_files/batch_a_${rnum}
+	echo "cd "${home}"/" >>batch_files/batch_a_${rnum}
+	echo "./batch_all "$rnum" ">>batch_files/batch_a_${rnum}
+	#  
+	chmod +x batch_files/batch_a_${rnum}
+
+	echo "batch_files/batch_a_"${rnum}" has been created!"
+	echo " "
+
+	#
+	# Create jsub script
+	#
+	rm -f batch_files/jscript_a_${rnum}
+	echo "PROJECT     solid" > batch_files/jscript_a_${rnum}
+	echo "COMMAND     "$home"/batch_files/batch_a_"${rnum} >>batch_files/jscript_a_${rnum}
+	echo "JOBNAME     collins_all_"${rnum} >>batch_files/jscript_a_${rnum}
+	echo "TRACK       simulation" >> batch_files/jscript_a_${rnum}
+	echo "TIME        4000" >>batch_files/jscript_a_${rnum}
+	echo "MEMORY      4000 MB" >>batch_files/jscript_a_${rnum}
+	echo "OS          centos65" >>batch_files/jscript_a_${rnum}
+
+	echo "batch_files/jscript_a_"${rnum}" has been created."
+	echo " "
+	#
+	# Submit job to the farm
+	#jsub batch_files/jscript_a_${rnum}
+    swif add-jsub -workflow solid_collins -create -script ${home}'/batch_files/jscript_a_'${rnum}
+	#
+    #another way to submit swif jobs:
+	#swife add-job -workflow solid_collins -project solid -track simulation -create -name 'collins_all_'${rnum} -cores 1 -ram 1GB -time 4000min -shell /bin/tcsh 'batch_files/batch_a'${rnum}
+	
+	swif run -workflow solid_collins
+	#
+	echo "Job "${rnum} "has been submited!"
+	echo
+	echo
+	#
+else
+	echo "Job "${rnum}" was done before? Anyway I will skip it!"
+fi
+#sleep 0.1
+
