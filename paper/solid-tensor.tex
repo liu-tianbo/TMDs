@@ -2,6 +2,7 @@
 \usepackage{graphicx}
 \usepackage{dcolumn}
 \usepackage{color}
+\usepackage{bm}
 
 \newcommand*{\FigPath}{.}%  
 \newcommand*{\BibPath}{.}%  
@@ -96,7 +97,7 @@ We will base our studies on a QCD global fit of the available Semi-Inclusive Dee
 
 The current available experimental data suggest that anti-quark transversity is very small and does not constrain anti-quark transversity. In this study we will assume that anti-quark transversity are negligible and does not contribute to tensor charge. The analysis of impact of future data including anti-quark transversity and data from future Electron-Ion Collider will be published elsewhere.
 
-In order to analyze the impact of future data we will utilize Bayesian reweighting technique method that will allow us to reliably estimate impact of Jefferson Lab 12 data on both quark transversity and its contribution to tensor charge.
+In order to analyze the impact of future data we will utilize Bayesian reweighting technique method \cite{Sato:2013ika} that will allow us to reliably estimate impact of Jefferson Lab 12 data on both quark transversity and its contribution to tensor charge.
 
 This study will also provide information on contribution of tensor charge from kinematical region of Jefferson Lab 12 and will serve as   guidance to planning of future experiments.
 
@@ -337,6 +338,63 @@ Future Jefferson Lab 12 data is going to allow for much more precise extraction 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 \AP{Nobuo, could you write description of the re-weighting procedure, please?}
+Bayes theorem allows to incorporate information from new data by applying re-weighting of probability densities for model parameters. The details of application of re-weighting are explained in Ref.~\cite{Sato:2013ika}.
+
+Probability density function for model parameters $\bm{\alpha}$, $\mathcal{P}(\bm{\alpha})$, is going to be modified in presence of new data and the Bayes theorem states that 
+%
+\begin{align}
+\mathcal{P}(\bm{\alpha}|D)
+=\frac{\mathcal{P}(D|\bm{\alpha})}{\mathcal{P}(D)} \mathcal{P}(\bm{\alpha}),
+\label{eq:bayes}
+\end{align}
+%
+where $\mathcal{P}(\bm{\alpha}|D)$ is the so-called \emph{posterior} density, 
+is the updated pdf from the \emph{prior} density 
+$\mathcal{P}(\bm{\alpha})$.
+ 
+The quantity $\mathcal{P}(D|\bm{\alpha})$ called the \emph{likelihood} 
+function,
+represents the conditional probability for a data set $D$ given the
+parameters $\bm{\alpha}$ of the model.
+The quantity $\mathcal{P}(D) $ ensures the normalization of the 
+posterior density to unity.  
+
+For a particular observable $\mathcal{O}$ one can write the expectation value 
+with the new data as,
+%
+\begin{align}
+\text{E}[\mathcal{O}]
+&=	\int d^n\alpha \mathcal{P}(\bm{\alpha}|D)
+	\mathcal{O}(\bm{\alpha})\notag\\
+&=	\int d^n\alpha \frac{\mathcal{P}(D|\bm{\alpha})}{\mathcal{P}(D)} 
+	\mathcal{P}(\bm{\alpha})\mathcal{O}(\bm{\alpha})\notag\\
+&=	\frac{1}{N} \sum_k w_k \mathcal{O}(\bm{\alpha}_k).
+\label{eq:E}
+\end{align}
+%
+In the last line  a Monte Carlo approximation of the integral is used.
+Similarly, the variance is of observable $\mathcal{O}$ is given by
+%
+\begin{align}
+\text{Var}[\mathcal{O}]
+&=\frac{1}{N} \sum_k w_k (\mathcal{O}(\bm{\alpha}_k)-\text{E}
+[\mathcal{O}])^2 .
+\label{eq:Var}
+\end{align}
+%
+The quantities $\{w_k\}$ are called \emph{weights} and are proportional to 
+$\mathcal{P}(D|\bm{\alpha}_k)$. 
+Their normalization is fixed by demanding $\text{E}[1]=1$, that is,  
+$\sum_k w_k=N$.
+%----------------------% 
+
+The reweighting procedure depends on the form assumed for the likelihood 
+function. We use $\chi^2$ minimization in the fits and thus weights have the following form:
+\begin{align}
+	w_k \propto \exp\left(-\frac{1}{2}\chi^2\right),
+\label{eq:bayes1}
+\end{align}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
