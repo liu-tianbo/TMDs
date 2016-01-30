@@ -46,7 +46,6 @@
 #include <TApplication.h>
 #include <Rtypes.h>
 #include <TTree.h>
-#include "LHAPDF/LHAPDF.h"
 //#include <TMatrix.h>
 /*}}}*/
 using namespace std;
@@ -110,7 +109,8 @@ void ReadIn(Int_t particle_flag, Int_t Q2_bin, Int_t z_bin,
             x_flag = j1;
 			if(pt_temp==pt_flag && x_temp== x_flag){
 
-				if (Astat[ncount]>0.&&Astat[ncount]<0.05){
+				if (1){
+				//if (Astat[ncount]>0.&&Astat[ncount]<0.05){
 					Astat_Siver[ncount] = Astat[ncount]*coef[0][ncount]; //coef[0]->Sivers,coef[1]->Collins, coef[2]->Pretzelosity
 					Astat_Collins[ncount] = Astat[ncount]*coef[1][ncount]; //coef[0]->Sivers,coef[1]->Collins, coef[2]->Pretzelosity
 					Astat_Pretz[ncount] = Astat[ncount]*coef[2][ncount]; //coef[0]->Sivers,coef[1]->Collins, coef[2]->Pretzelosity
