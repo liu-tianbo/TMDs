@@ -6,6 +6,9 @@ import fnmatch
 import cPickle 
 from operator import mul
 import pylab as py
+#import matplotlib as plt
+from matplotlib import pyplot as plt
+from matplotlib import patches as patch
 #from line_profiler import LineProfiler
 
 def com(func,X,info): 
@@ -207,7 +210,7 @@ def colors(name):
   elif name=='white':return get_rgb(255,255,255)
 
 def add_subplot_axes(ax,rect,axisbg='w'):
-  fig = py.gcf()
+  fig = plt.gcf()
   box = ax.get_position()
   width = box.width
   height = box.height
@@ -239,7 +242,7 @@ class SPLIT_AX(object):
     ax.axis('off')
     axisbg='w'
   
-    fig = py.gcf()
+    fig = plt.gcf()
     box = ax.get_position()
     transFigure = fig.transFigure.inverted()
     width = box.width/2
@@ -391,10 +394,10 @@ def fill_between(x, y1, y2=0, ax=None, **kwargs):
   that it also plots a proxy artist (specifically, a rectangle of 0 size)
   so that it can be added it appears on a legend.
   """
-  ax = ax if ax is not None else py.gca()
+  ax = ax if ax is not None else plt.gca()
   ax.fill_between(x, y1, y2, **kwargs)
   if kwargs['facecolor']=='none': kwargs['facecolor']='w'
-  p = py.Rectangle((0, 0), 0, 0, **kwargs)
+  p = patch.Rectangle((0, 0), 0, 0, **kwargs)
   ax.add_patch(p)
   return p
 
