@@ -406,10 +406,20 @@ a_i\partial a_j}
 \end{align}
 %
 
+Using the new covariance matrix one can generate and ensemble of MC
+parameters $\left\{\bm{a}_k\right\}$ from the multivariate gaussian distribution.
+The variance for a given observable is the given by 
 
-
-
-
+%
+\begin{align}
+\text{V}[\mathcal{O}]
+&=\frac{1}{N} \sum_k (\mathcal{O}(\bm{\alpha}_k)-\text{E}
+[\mathcal{O}])^2 
+\label{eq:Var}
+\end{align}
+%
+where $\mathcal{O}$ is the observable (i.e. transversity, tensor
+charge) and ${\rm E}[\mathcal{O}]$ is the expectation value.  
 
 
 
