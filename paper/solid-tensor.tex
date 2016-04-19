@@ -332,6 +332,90 @@ One can see that lattice QCD calculations have much better precision compared to
 
 Future Jefferson Lab 12 data is going to allow for much more precise extraction of tensor charge that will compete with ab-initio calculations.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Impact of new simulated data}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In this section we introduce a simple method to estimate the impact 
+of the future SOLID data to the transversely. In general the
+information of the best fit parameters and their uncertainties is
+encoded in the likelihood function
+%
+\begin{align}
+\mathcal{P}(\bm{\alpha}|D)
+=\mathcal{N} \exp\left(-\frac{1}{2}\chi^2(\bm{a},D)\right)
+\label{eq:likelihood}
+\end{align}
+%
+where $\mathcal{N}$ is a normalization constant. $\bm{a}$ represents
+the model parameters while $D$ denotes collectively the experimental data 
+and its uncertainties. $\chi^2$ is the standard Chi-squared defined as
+%
+\begin{align}
+\chi^2=\sum_i \left(\frac{D_i-T_i(\bm{a})}{\delta D_i}\right)^2
+\label{eq:chi2}
+\end{align}
+%
+Given a data set the best fit parameters $\bm{a}_0$ maximizes the likelihood (or
+equivalently minimizes the $\chi^2$) and the covariance matrix of the
+parameters is given by the inverse of the Hessian matrix 
+%
+\begin{align}
+H_{i,j}=\left. \frac{1}{2}\frac{\partial\chi^2(\bm{a},D)}{\partial
+a_i\partial a_j}
+\right|_{\bm{a}_0}
+\label{eq:H}
+\end{align}
+%
+
+Since only the uncertainties of the future measurements is available,
+the actual observable is simulated using the current best fit
+parameters. That means that if one include the simulated data in to a
+fit along with the old data, the best fit parameters wont change. Only
+the uncertainties estimated from the Hessian matrix changes. Notice
+that since the $\chi^2$ is additive one can write the updated Hessian
+matrix with the presence of new data
+
+%
+\begin{align}
+H^{\rm New}_{i,j}=
+\left. \frac{1}{2}\frac{\partial\chi^2(\bm{a},D_{\rm old})}{\partial
+a_i\partial a_j}
+\right|_{\bm{a}_0}
++
+\left. \frac{1}{2}\frac{\partial\chi^2(\bm{a},D_{\rm new})}{\partial
+a_i\partial a_j}
+\right|_{\bm{a}_0}
+\label{eq:Hnew}
+\end{align}
+%
+Notice that if the covariance matrix from the original fit to
+$D_{old}$ is available then one can obtain an update covariance 
+matrix with the new data
+
+%
+\begin{align}
+C_{\rm New}^{-1}=
+H^{\rm New}_{i,j}=
+C_{\rm old}^{-1}
++
+\left. \frac{1}{2}\frac{\partial\chi^2(\bm{a},D_{\rm new})}{\partial
+a_i\partial a_j}
+\right|_{\bm{a}_0}
+\label{eq:Hnew}
+\end{align}
+%
+
+
+
+
+
+
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Bayesian re-weighting technique}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
