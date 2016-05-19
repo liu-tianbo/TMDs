@@ -1,0 +1,94 @@
+ === EXP = solid,  TARGET=3he,   PID=pim
+  4 === 13 Parameters from Inputs(M_ad_c,M_bu_c) : ===
+  5 ===  B=0.023617, Nu=0.261971, Nd=-0.195220, Au=1.695860, Ad=0.280485, Bu=-0.134563, Bd=0.003614
+  6 ===  Nu_t=0.854376, Nd_t=-0.999999, Au_t=0.688367, Ad_t=1.794340, Bu_t=0.048195, Bd_t=6.996760
+  7 ======================================
+  8 
+  9 && Total number of pim data points on target 3he is 879
+ 10 && Number of lines in  ./data/solid_unpolarised_3he_pim.dat is = 879
+ 11 x_min_jlab = 0.0619719 x_max_jlab = 0.597546
+
+
+Error in <GSLError>: Error 5 in qag.c at 261 : could not integrate function
+Error in <GSLError>: Error 5 in qag.c at 261 : could not integrate function
+Error in <GSLError>: Error 5 in qag.c at 261 : could not integrate function
+Error in <GSLError>: Error 5 in qag.c at 261 : could not integrate function
+
+ *** Break *** bus error
+
+
+
+===========================================================
+There was a crash.
+This is the entire stack trace of all threads:
+===========================================================
+#0  0x0000003624aac61e in waitpid () from /lib64/libc.so.6
+#1  0x0000003624a3e609 in do_system () from /lib64/libc.so.6
+#2  0x00007f78b7782ec8 in TUnixSystem::StackTrace() () from /u/apps/root/5.34.13/root/lib/libCore.so.5.34
+#3  0x00007f78b77819c3 in TUnixSystem::DispatchSignals(ESignals) () from /u/apps/root/5.34.13/root/lib/libCore.so.5.34
+#4  <signal handler called>
+#5  0x00007f78b3e3bb6a in ROOT::Math::AdaptiveIntegratorMultiDim::DoIntegral(double const*, double const*, bool) () from /u/apps/root/5.34.13/root/lib/libMathCore.so.5.34
+#6  0x0000000000419024 in POLARISED_N_PIM(int, double*, double*, double*, double*) ()
+#7  0x000000000041c8d4 in main ()
+===========================================================
+
+
+The lines below might hint at the cause of the crash.
+If they do not help you then please submit a bug report at
+http://root.cern.ch/bugs. Please post the ENTIRE stack trace
+from above as an attachment in addition to anything else
+that might help us fixing this issue.
+===========================================================
+#5  0x00007f78b3e3bb6a in ROOT::Math::AdaptiveIntegratorMultiDim::DoIntegral(double const*, double const*, bool) () from /u/apps/root/5.34.13/root/lib/libMathCore.so.5.34
+#6  0x0000000000419024 in POLARISED_N_PIM(int, double*, double*, double*, double*) ()
+#7  0x000000000041c8d4 in main ()
+===========================================================
+
+
+!!!Fatal Error: Interpreter memory overwritten by illegal access.!!!
+!!!Terminate session!!!
+!!!Fatal Error: Interpreter memory overwritten by illegal access.!!!
+!!!Terminate session!!!
+!!!Fatal Error: Interpreter memory overwritten by illegal access.!!!
+!!!Terminate session!!!
+!!!Fatal Error: Interpreter memory overwritten by illegal access.!!!
+!!!Terminate session!!!
+!!!Fatal Error: Interpreter memory overwritten by illegal access.!!!
+!!!Terminate session!!!
+!!!Fatal Error: Interpreter memory overwritten by illegal access.!!!
+!!!Terminate session!!!
+!!!Fatal Error: Interpreter memory overwritten by illegal access.!!!
+!!!Terminate session!!!
+!!!Fatal Error: Interpreter memory overwritten by illegal access.!!!
+!!!Terminate session!!!
+!!!Fatal Error: Interpreter memory overwritten by illegal access.!!!
+!!!Terminate session!!!
+!!!Fatal Error: Interpreter memory overwritten by illegal access.!!!
+!!!Terminate session!!!
+!!!Fatal Error: Interpreter memory overwritten by illegal access.!!!
+!!!Terminate session!!!
+
+ *** Break *** segmentation violation
+
+
+
+===========================================================
+There was a crash.
+This is the entire stack trace of all threads:
+===========================================================
+#0  0x0000003624aac61e in waitpid () from /lib64/libc.so.6
+#1  0x0000003624a3e609 in do_system () from /lib64/libc.so.6
+#2  0x00007f78b7782ec8 in TUnixSystem::StackTrace() () from /u/apps/root/5.34.13/root/lib/libCore.so.5.34
+#3  0x00007f78b77819c3 in TUnixSystem::DispatchSignals(ESignals) () from /u/apps/root/5.34.13/root/lib/libCore.so.5.34
+#4  <signal handler called>
+#5  0x00007f78b6d0c765 in G__destroy_upto () from /u/apps/root/5.34.13/root/lib/libCint.so.5.34
+#6  0x00007f78b6d0cedc in G__scratch_globals_upto () from /u/apps/root/5.34.13/root/lib/libCint.so.5.34
+#7  0x00007f78b7744861 in TCint::ResetGlobals() () from /u/apps/root/5.34.13/root/lib/libCore.so.5.34
+#8  0x00007f78b76f01c5 in TROOT::EndOfProcessCleanups() () from /u/apps/root/5.34.13/root/lib/libCore.so.5.34
+#9  0x00007f78b777d036 in TUnixSystem::Exit(int, bool) () from /u/apps/root/5.34.13/root/lib/libCore.so.5.34
+#10 0x00007f78b7781a9b in TUnixSystem::DispatchSignals(ESignals) () from /u/apps/root/5.34.13/root/lib/libCore.so.5.34
+#11 <signal handler called>
+#12 0x00007f78b3e3bb6a in ROOT::Math::AdaptiveIntegratorMultiDim::DoIntegral(double const*, double const*, bool) () from /u/apps/root/5.34.13/root/lib/libMathCore.so.5.34
+#13 0x0000000000419024 in POLARISED_N_PIM(int, double*, double*, double*, double*) ()
+#14 0x000000000041c8d4 in main ()
+===========================================================
