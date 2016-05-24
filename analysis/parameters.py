@@ -13,7 +13,7 @@ rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 rc('text',usetex=True)
 ##########################################
 
-class HESS(object):
+class _HESS(object):
 
   def __init__(self):
 
@@ -91,7 +91,7 @@ class HESS(object):
 
   # routines for analysis chi2 scan
 
-  def _get_scan_data(self,fname):
+  def _X_get_scan_data(self,fname):
     F=open(fname)
     L=F.readlines()
     F.close()
@@ -103,6 +103,8 @@ class HESS(object):
     for h in L[0][2:]:
       H[h]=cnt
       cnt+=1
+
+    print H
     
     # remove header table
     L=L[1:]
@@ -133,6 +135,43 @@ class HESS(object):
         dchi2dxdx=(chi2max-2*chi20+chi2min)/h**2
         data[k]['h'].append(h)
         data[k]['dchi2dxdx'].append(dchi2dxdx)
+    save(data,'data/%s.dchid2dxdx'%fname.split('/')[1].replace('.dat','')) 
+
+  def _get_scan_data(self,fname):
+    F=open(fname)
+    L=F.readlines()
+    F.close()
+    L=[l.split() for l in L]
+
+    # get parameter names  
+    params=sorted(set([l[0] for l in L[2:]]))
+
+    # get parameters column index
+    icols={}
+    for p in params:
+      for i in range(len(L[0])):
+        if L[0][i]==p: icols[p]=i
+
+    # get dchidxdx
+    data={} 
+    chi20=float(L[1][2])
+    for p in params:
+      data[p]={'h':[],'dchi2dxdx':[]}
+      rows=[l for l in L if l[0]==p]
+      icol=icols[p]
+      for i in range(0,len(rows),2): 
+        chi2max=float(rows[i][2])
+        chi2min=float(rows[i+1][2])
+        pmax=float(rows[i][icol])
+        pmin=float(rows[i+1][icol])
+        h=0.5*(pmax-pmin)
+        dchi2dxdx=(chi2max-2*chi20+chi2min)/h**2
+
+        data[p]['h'].append(h)
+        data[p]['dchi2dxdx'].append(dchi2dxdx)
+
+        fmt='%s %0.4e %0.4e %0.2e %0.2e %0.2e %0.2e %0.4e'
+        print fmt%(p,pmin,pmax,chi20,chi2min,chi2max,h,dchi2dxdx)
     save(data,'data/%s.dchid2dxdx'%fname.split('/')[1].replace('.dat','')) 
 
   def get_scan_data(self):
@@ -225,39 +264,27 @@ class HESS(object):
     return L
 
   def _get_hess_grid(self,fname):
-    K=['BLNY','Nu_c','Nd_c','au_c','ad_c','bu_c','bd_c','Nu_T','Nd_T','au_T','ad_T','bu_T','bd_T']
+    params=self.order
 
+    # retrieve 
     data=load('data/%s.dchid2dxdx'%fname) 
     H={}
-    for k in K:
-      h=data[k]['h']  
-      I=np.argsort(h)
-      if k=='BLNY':i=I[-1]  
-      if k=='Nu_c':i=I[-1]
-      if k=='Nd_c':i=I[-1]
-      if k=='au_c':i=I[-1]
-      if k=='ad_c':i=I[-1]
-      if k=='bu_c':i=I[-1]  
-      if k=='bd_c':i=I[-1]  
-      if k=='Nu_T':i=I[-1]
-      if k=='Nd_T':i=I[-1]
-      if k=='au_T':i=I[-5]
-      if k=='ad_T':i=I[-4]
-      if k=='bu_T':i=I[-5]
-      if k=='bd_T':i=I[-5]
-      H[k]=h[i]
+    for p in params:
+      H[p]=data[p]['h'][0]
     
     # list or parameters
-    npar=len(K)
+    npar=len(params)
     L=[]
     L.append('        %s'%self._get_target_par(None,None,All=True))
     for i in range(npar):
       for j in range(i,npar):
         hi=H[K[i]]
         hj=H[K[j]]
-        #L.append('='*100)
-        #L.append('h(%s)=%0.2e  h(%s)=%0.2e'%(K[i],hi,K[j],hj))
-        #L.append('        %s'%self._get_target_par(K[i],K[j]))
+
+        L.append('='*100)
+        L.append('h(%s)=%0.2e  h(%s)=%0.2e'%(K[i],hi,K[j],hj))
+        L.append('        %s'%self._get_target_par(K[i],K[j]))
+
         L.append('+%s +%s %s'%(K[i],K[j],self._gen_hess_pars(hi,hj,K[i],K[j])))
         L.append('+%s -%s %s'%(K[i],K[j],self._gen_hess_pars(hi,-hj,K[i],K[j])))
         L.append('-%s +%s %s'%(K[i],K[j],self._gen_hess_pars(-hi,hj,K[i],K[j])))
@@ -271,18 +298,105 @@ class HESS(object):
 
   def get_hess_grid(self):
     self._get_hess_grid('clas_p_pim')
-    self._get_hess_grid('clas_p_pip')
-    self._get_hess_grid('solid_3he_pip')
-    self._get_hess_grid('solid_3he_pim')
-    self._get_hess_grid('solid_p_pip')
-    self._get_hess_grid('solid_p_pim')
+    #self._get_hess_grid('clas_p_pip')
+    #self._get_hess_grid('solid_3he_pip')
+    #self._get_hess_grid('solid_3he_pim')
+    #self._get_hess_grid('solid_p_pip')
+    #self._get_hess_grid('solid_p_pim')
+
+class HESS(object):
+
+  def __init__(self):
+
+    par={}
+    par['BLNY']= {'val': 2.36166e-02,'err':7.17002e-04}
+    par['Nu_c']= {'val': 2.61971e-01,'err':2.46543e-02}
+    par['Nd_c']= {'val':-1.95220e-01,'err':7.15875e-03}
+    par['au_c']= {'val': 1.69586e+00,'err':7.59358e-03}
+    par['ad_c']= {'val': 3.20601e-01,'err':4.01160e-02}
+    par['bu_c']= {'val': 1.46831e-06,'err':5.38257e-01}  
+    par['bd_c']= {'val': 3.61390e-03,'err':7.93746e-01}  
+    par['Nu_T']= {'val': 8.54376e-01,'err':8.65518e-02}
+    par['Nd_T']= {'val':-9.99999e-01,'err':1.25156e-01}
+    par['au_T']= {'val': 6.88367e-01,'err':4.33534e-02}
+    par['ad_T']= {'val': 1.79434e+00,'err':3.17379e-01}
+    par['bu_T']= {'val': 4.81953e-02,'err':3.88934e-02}
+    par['bd_T']= {'val': 6.99676e+00,'err':2.64818e+00}
+    self.par=par
+    
+    order=[]
+    order.append('BLNY') 
+    order.append('Nu_c')
+    order.append('Nd_c')
+    order.append('au_c')
+    order.append('ad_c')
+    order.append('bu_c')
+    order.append('bd_c')
+    order.append('Nu_T')
+    order.append('Nd_T')
+    order.append('au_T')
+    order.append('ad_T')
+    order.append('bu_T')
+    order.append('bd_T')
+    self.order=order
+
+  def _gen_hess_pars(self,hi,hj,Ki,Kj):
+    par=self.par
+    order=self.order
+    L=''
+    for o in order:
+      if o==Ki:   L+='%15.5e'%(par[o]['val']+hi)
+      elif o==Kj: L+='%15.5e'%(par[o]['val']+hj)
+      else:       L+='%15.5e'%par[o]['val']
+    return L
+
+  def _get_target_par(self,Ki,Kj,All=False):
+    par=self.par
+    order=self.order
+    L=''
+    for o in order:
+      if All==False:
+        if o==Ki:   L+='%15s'%(Ki)
+        elif o==Kj: L+='%15s'%(Kj)
+        else:       L+='%15s'%''
+      else:
+        L+='%15s'%o
+    return L
+
+  def get_hess_grid(self):
+    order=self.order
+    par=self.par
+
+    # list or parameters
+    npar=len(order)
+    L=[]
+    L.append('        %s'%self._get_target_par(None,None,All=True))
+    for i in range(npar):
+      for j in range(i,npar):
+
+        pi=order[i]
+        pj=order[j]
+        hi=par[pi]['err']
+        hj=par[pj]['err']
+
+        #L.append('='*100)
+        #L.append('h(%s)=%0.2e  h(%s)=%0.2e'%(pi,hi,pj,hj))
+        #L.append('        %s'%self._get_target_par(pi,pj))
+
+        L.append('+%s +%s %s'%(pi,pj,self._gen_hess_pars(hi,hj,pi,pj)))
+        L.append('+%s -%s %s'%(pi,pj,self._gen_hess_pars(hi,-hj,pi,pj)))
+        L.append('-%s +%s %s'%(pi,pj,self._gen_hess_pars(-hi,hj,pi,pj)))
+        L.append('-%s -%s %s'%(pi,pj,self._gen_hess_pars(-hi,-hj,pi,pj)))
+
+    L=[l+'\n' for l in L]
+    checkdir('data')
+    F=open('data/hessgrid.dat','w')
+    F.writelines(L)
+    F.close()
 
 if __name__=='__main__':
 
   hess=HESS()
-  #hess.gen_scan_pars()
-  #hess.get_scan_data()
-  #hess.plot_hess_h()
   hess.get_hess_grid()
 
 
