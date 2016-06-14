@@ -524,7 +524,12 @@ class HESS(object):
     # save hessian
     save(H,'data/'+fname+'.hess')
 
-  def tmp(self,fname):
+  def gen_mcpar(self,fname):
+    """
+    this routine generates MC pars. to visualize the impact with respect to 
+    original cov matrix
+    """
+
     H0=load('data/old.hess')
     H=load('data/'+fname+'.hess')
     ndim=H0.shape[0]
@@ -570,6 +575,52 @@ class HESS(object):
     py.tight_layout()
     py.savefig('gallery/%s.pdf'%fname)
 
+  def gen_hess_par(self,fname):
+
+    H0=load('data/old.hess')
+    H=load('data/'+fname+'.hess')
+    ndim=H0.shape[0]
+    I=[i for i in range(ndim) if np.isnan(H[0][i])==False]
+    nrdim=len(I)
+ 
+    RH0=np.copy(H0[I,:][:,I])
+    RH=np.copy(H[I,:][:,I])
+
+    HTOT=RH0+RH
+    W,V=LA.eig(HTOT)
+    V=np.transpose(V)
+    for i in range(W.size): 
+      if W[i]<0: continue
+      V[i]/=W[i]**0.5
+
+    L=[]
+
+    h='%5s'%''
+    for name in self.order: h+='%15s'%name
+    L.append(h)
+    print h
+    
+
+    P0=np.copy(self.P0)
+    for i in range(W.size):
+      if W[i]<0: continue
+      PP=np.copy(P0)
+      PP[I]+=V[i]
+      PM=np.copy(P0)
+      PM[I]-=V[i]
+      lp='+%5d'%i
+      for p in PP: lp+='%15.5e'%p
+      lm='-%5d'%i
+      for p in PM: lm+='%15.5e'%p
+      L.append(lp)
+      L.append(lm)
+      print lp
+      print lm
+
+    L=[l+'\n' for l in L]
+    F=open('data/'+fname+'.eig','w')
+    F.writelines(L)
+    F.close()
 
 
 if __name__=='__main__':
@@ -584,15 +635,19 @@ if __name__=='__main__':
   #hess.get_new_hessian('solid_p_pip')
   #hess.get_old_hessian()
 
-  #hess.tmp('clas_p_pim')
-  #hess.tmp('clas_p_pip')
-  #hess.tmp('solid_3he_pim')
-  #hess.tmp('solid_3he_pip')
-  #hess.tmp('solid_p_pim')
-  hess.tmp('solid_p_pip')
+  #hess.gen_mcpar('clas_p_pim')
+  #hess.gen_mcpar('clas_p_pip')
+  #hess.gen_mcpar('solid_3he_pim')
+  #hess.gen_mcpar('solid_3he_pip')
+  #hess.gen_mcpar('solid_p_pim')
+  #hess.gen_mcpar('solid_p_pip')
 
-
-
+  hess.gen_hess_par('clas_p_pim')
+  hess.gen_hess_par('clas_p_pip')
+  hess.gen_hess_par('solid_3he_pim')
+  hess.gen_hess_par('solid_3he_pip')
+  hess.gen_hess_par('solid_p_pim')
+  hess.gen_hess_par('solid_p_pip')
 
 
 
