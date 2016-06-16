@@ -82,7 +82,8 @@ for i in range(0,2):
                 elif Type=='C':
                     types='C'#}}}
 
-                gen_file = '%s_%s_%s/Tensor_%s_%d.dat'%(exps[i], tgts[j], pids[k], types, ID )
+                #gen_file = '%s_%s_%s/Tensor_%s_%d.dat'%(exps[i], tgts[j], pids[k], types, ID )
+                gen_file = '%s_%s_%s/Old_%s_%d.dat'%(exps[i], tgts[j], pids[k], types, ID )
                 if os.path.isfile(gen_file):
                     print '^^^^ Reading file %s!'%gen_file
                     lines = open(gen_file, 'r').readlines()
@@ -187,7 +188,8 @@ for i in range(0,2):
                     dO_trans_u[m] = 1./2. * dO2_trans_u[m]**0.5
                     dO_trans_d[m] = 1./2. * dO2_trans_d[m]**0.5
 
-                out_file = 'out_%s_%s_%s.dat'%(exps[i], tgts[j], pids[k])
+                #out_file = 'out_%s_%s_%s.dat'%(exps[i], tgts[j], pids[k])
+                out_file = 'old_%s_%s_%s.dat'%(exps[i], tgts[j], pids[k])
                 of = open(out_file, 'w')
                 
                 lines0 = '## T_u  dO_u   T_d  dO_d  T_u  dO_u   T_d_jlab  dO_d_jlab  T_u  dO_u_jlab   T_d  dO_d_jlab' 
