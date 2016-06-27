@@ -1647,9 +1647,9 @@ int main(int argc, char **argv)
         // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section
         for( int i = 0; i < number_bins1; i++){
             double Asym = POLARISED[i]/UNPOLARISED[i];
-            ChiSQ += pow( (Asym_New0[i]-Asym)/(Astat[i]),2);
+            ChiSQ += pow( (Asym0[i]-Asym)/(Astat[i]),2);
             if(isnan(ChiSQ))
-                cout<<Form("---#%d:  Asym_New0 = %f, Asym=%f,  Astat=%f", i, Asym_New0[i], Asym, Astat[i])<<endl;
+                cout<<Form("---#%d:  Asym0 = %f, Asym=%f,  Astat=%f", i, Asym0[i], Asym, Astat[i])<<endl;
 
             outfile << i << " " << zval_used[i] << " " << xval_used[i] << " " << Q2val_used[i] << " " << ptval_used[i] << " " << UNPOLARISED[i] << " " << Asym << " " << Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " <<ChiSQ<< endl;
         }
