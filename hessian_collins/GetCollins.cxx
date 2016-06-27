@@ -1605,7 +1605,8 @@ int main(int argc, char **argv)
 
         //WRITE ALL DATA IN A DATA FILE   
         /*Load the best fit values{{{*/
-        TString infile_name0 = Form("./data/bestfit_%s_data_%s_%s_0.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data());
+        //TString infile_name0 = Form("./data/bestfit_%s_data_%s_%s_0.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data());
+        TString infile_name0 = Form("./data/bestfit_%s_%s_%s_1.dat",EXPERIMENT.Data(),TARGET.Data(),PARTICLE.Data());
         cout<<"--- Reading best-fit data from "<<infile_name0.Data()<<endl;
         ifstream infile0(infile_name0.Data());
         double Z0[2000], xB0[2000], Q20[2000], Pt0[2000], Sigma_Unp0[2000], Asym0[2000], Asym_New0[2000], Asym_Err0[2000];
@@ -1613,7 +1614,8 @@ int main(int argc, char **argv)
         int Bin0[2000];
         int i=0;
         while(infile0 >> Bin0[i]>> Z0[i]>> xB0[i]>> Q20[i] >> Pt0[i] 
-                >> Sigma_Unp0[i] >> Asym0[i] >> Asym_New0[i] >> Asym_Err0[i] 
+                //>> Sigma_Unp0[i] >> Asym0[i] >> Asym_New0[i] >> Asym_Err0[i] 
+                >> Sigma_Unp0[i] >> Asym0[i] >> Asym_Err0[i] 
                 >> deltaU0[i] >> deltaD0[i] >> deltaU_EX0[i] >> deltaD_EX0[i]){
             if(VERBOSE1)
                 cerr<<"---- Reading A0 data "<<infile_name0.Data()<<"  #"<<i<<endl;
@@ -1628,9 +1630,9 @@ int main(int argc, char **argv)
         // bin z x Q2 pt unpolarised_cross-section polarised_cross-section error_polarised_cross-section
         for( int i = 0; i < number_bins1; i++){
             double Asym = POLARISED[i]/UNPOLARISED[i];
-            ChiSQ += pow( (Asym_New0[i]-Asym)/(Astat[i]),2);
+            ChiSQ += pow( (Asym0[i]-Asym)/(Astat[i]),2);
             if(isnan(ChiSQ))
-                cout<<Form("---#%d:  Asym_New0 = %f, Asym=%f,  Astat=%f", i, Asym_New0[i], Asym, Astat[i])<<endl;
+                cout<<Form("---#%d:  Asym0 = %f, Asym=%f,  Astat=%f", i, Asym0[i], Asym, Astat[i])<<endl;
 
             outfile << i << " " << zval[i] << " " << xval[i] << " " << Q2val[i] << " " << ptval[i] << " " << UNPOLARISED[i] << " " << Asym << " " << Astat[i] << " " << tensor_up << " " << tensor_down << " " << tensor_up_jlab << " " << tensor_down_jlab << " " <<ChiSQ<< endl;
         }
