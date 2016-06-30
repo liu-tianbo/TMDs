@@ -23,7 +23,7 @@ GSL_DIR = /work/halla/solid/yez/TMDs/gsl-1.16
 
 ifeq ($(OS),Linux)
 #Hoppet does evolution of transversity, unpolarised and helicity 
-HOPPETLIB =  -L$(HOPPET_DIR)src  -lhoppet_v1 
+HOPPETLIB =  -L$(HOPPET_DIR)/src  -lhoppet_v1 
 #gsl
 GSL_LIB = -L$(GSL_DIR)/lib/ -lgsl  -lgslcblas
 else # Mac
